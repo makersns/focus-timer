@@ -5,15 +5,19 @@ use ::windows::{
     Foundation::TypedEventHandler,
     Win32::{
         Foundation::RPC_E_CHANGED_MODE,
-        System::WinRT::{
-            RoInitialize, RoUninitialize, RO_INIT_MULTITHREADED, RO_INIT_SINGLETHREADED,
+        System::{
+            Com::CoIncrementMTAUsage,
+            WinRT::{RoInitialize, RoUninitialize, RO_INIT_MULTITHREADED, RO_INIT_SINGLETHREADED},
         },
     },
     UI::Notifications::{
         ToastFailedEventArgs, ToastNotification, ToastNotificationManager, ToastNotifier,
     },
 };
-use std::{collections::VecDeque, sync::Mutex};
+use std::{
+    collections::VecDeque,
+    sync::{Mutex, OnceLock},
+};
 use tauri::{AppHandle, Emitter, Manager};
 
 pub struct Backend {
@@ -24,9 +28,34 @@ pub struct Backend {
     toasts: Mutex<VecDeque<RetainedToast>>,
 }
 
+fn keep_process_mta_alive() -> Result<(), String> {
+    // windows-core 0.62 caches agile activation factories for the entire process.
+    // Submitted toasts also outlive the worker apartment that created them. Keep
+    // one process-wide MTA usage reference so the last worker's RoUninitialize
+    // cannot unload resources still referenced by those factories or toasts.
+    //
+    // The opaque cookie is intentionally retained until process termination.
+    // Do not CoDecrementMTAUsage in Backend/command/toast cleanup: windows-core's
+    // static factory caches remain alive. This is one bounded process resource;
+    // each thread's separate RoInitialize reference is still balanced below.
+    // CoIncrementMTAUsage cookies may be retained across threads; the address is
+    // stored as an opaque integer and is never dereferenced.
+    static COOKIE: OnceLock<Result<usize, String>> = OnceLock::new();
+    COOKIE
+        .get_or_init(|| {
+            unsafe { CoIncrementMTAUsage() }
+                .map(|cookie| cookie.0 as usize)
+                .map_err(|_| "notification_service_unavailable".to_owned())
+        })
+        .as_ref()
+        .map(|_| ())
+        .map_err(Clone::clone)
+}
+
 struct WinRtApartment;
 impl WinRtApartment {
     fn enter() -> Result<Self, String> {
+        keep_process_mta_alive()?;
         // Worker threads normally use MTA. If the caller already has an STA
         // apartment, initialize WinRT in that same apartment rather than changing it.
         let result = match unsafe { RoInitialize(RO_INIT_MULTITHREADED) } {
@@ -196,29 +225,42 @@ mod tests {
     }
 
     #[test]
-    fn winrt_toast_factories_work_on_fresh_and_existing_sta_threads() {
-        // Run real WinRT activation in Windows CI, without showing a notification
-        // or changing OS permissions. Each case owns a fresh, bounded thread.
-        for existing_sta in [false, true] {
-            std::thread::spawn(move || {
-                let _existing = if existing_sta {
-                    unsafe { RoInitialize(RO_INIT_SINGLETHREADED) }.unwrap();
-                    Some(WinRtApartment)
-                } else {
-                    None
-                };
-                let _apartment = WinRtApartment::enter().unwrap();
-                let document = XmlDocument::new().unwrap();
-                document
-                    .LoadXml(&HSTRING::from(
-                        "<toast><visual><binding template=\"ToastGeneric\"><text>Focus</text></binding></visual><audio silent=\"true\"/></toast>",
-                    ))
-                    .unwrap();
-                let toast = ToastNotification::CreateToastNotification(&document).unwrap();
-                assert!(toast.Content().is_ok());
-            })
-            .join()
-            .unwrap();
+    fn winrt_toasts_survive_fresh_sta_and_fresh_apartment_cycles() {
+        // Exercise the real factories and retain a toast after its creating
+        // thread's balanced apartment guards have exited. Each next apartment
+        // must be able to use both the old toast and the cached factories.
+        // No notification is shown and no OS permission is changed.
+        let mut retained: Option<ToastNotification> = None;
+        for existing_sta in [false, true, false] {
+            let previous = retained.take();
+            retained = Some(
+                std::thread::spawn(move || {
+                    let _existing = if existing_sta {
+                        unsafe { RoInitialize(RO_INIT_SINGLETHREADED) }.unwrap();
+                        Some(WinRtApartment)
+                    } else {
+                        None
+                    };
+                    let _apartment = WinRtApartment::enter().unwrap();
+                    if let Some(previous) = previous {
+                        assert!(previous.Content().is_ok());
+                    }
+                    let document = XmlDocument::new().unwrap();
+                    document
+                        .LoadXml(&HSTRING::from(
+                            "<toast><visual><binding template=\"ToastGeneric\"><text>Focus</text></binding></visual><audio silent=\"true\"/></toast>",
+                        ))
+                        .unwrap();
+                    let toast = ToastNotification::CreateToastNotification(&document).unwrap();
+                    assert!(toast.Content().is_ok());
+                    toast
+                })
+                .join()
+                .unwrap(),
+            );
         }
+        let _apartment = WinRtApartment::enter().unwrap();
+        assert!(retained.as_ref().unwrap().Content().is_ok());
+        drop(retained);
     }
 }
