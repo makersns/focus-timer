@@ -939,7 +939,9 @@ pub fn run() {
         .expect("Focus could not initialize its desktop window");
 
     application.run(|app, event| match event {
-        RunEvent::ExitRequested { .. } => prepare_exit(app),
+        // macOS native Quit/AppleEvents can deliver Exit directly, without an
+        // ExitRequested event. The idempotent checkpoint covers both paths.
+        RunEvent::ExitRequested { .. } | RunEvent::Exit => prepare_exit(app),
         #[cfg(target_os = "macos")]
         RunEvent::Reopen { .. } => show_main(app),
         _ => {}

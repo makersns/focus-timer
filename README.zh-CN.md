@@ -40,7 +40,7 @@ macOS 和 Windows 的组件是轻量悬浮窗口，Android 使用系统桌面组
 
 | 桌面悬浮组件 | Android 主屏幕组件 |
 | --- | --- |
-| ![Focus 桌面悬浮计时](docs/images/focus-mini.png) | ![Focus Android 主屏幕组件](docs/images/focus-android-widget.png) |
+| <img src="docs/images/focus-mini.png" width="360" alt="Focus 桌面悬浮计时" /><br /><br /><img src="docs/images/focus-mini-dark.png" width="360" alt="Focus 深色桌面悬浮计时" /> | <img src="docs/images/focus-android-widget.png" width="220" alt="Focus Android 主屏幕组件" /> |
 
 ## 下载与安装
 

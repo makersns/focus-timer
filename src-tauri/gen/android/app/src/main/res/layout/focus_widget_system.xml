@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/focus_widget_root" android:layout_width="match_parent"
     android:layout_height="match_parent" android:orientation="vertical"
-    android:padding="16dp" android:background="@drawable/focus_widget_background_system">
+    android:padding="12dp" android:background="@drawable/focus_widget_background_system">
     <TextView android:id="@+id/focus_widget_title" android:layout_width="match_parent"
-        android:layout_height="22dp" android:text="@string/focus_widget_title"
+        android:layout_height="20dp" android:text="@string/focus_widget_title"
         android:textColor="@color/focus_widget_secondary" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" />
-    <LinearLayout android:layout_width="match_parent" android:layout_height="64dp"
-        android:gravity="center_vertical" android:orientation="horizontal">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:minHeight="56dp" android:gravity="center_vertical" android:orientation="horizontal">
         <FrameLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
             <Chronometer android:id="@+id/focus_widget_clock" android:layout_width="match_parent"
                 android:layout_height="match_parent" android:gravity="center_vertical"
@@ -17,7 +17,7 @@
             <TextView android:id="@+id/focus_widget_time" android:layout_width="match_parent"
                 android:layout_height="match_parent" android:gravity="center_vertical"
                 android:textColor="@color/focus_widget_primary" android:textSize="48sp" android:fontFamily="sans-serif-medium"
-                android:fontFeatureSettings="tnum" android:maxLines="1" android:text="25:00" />
+                android:fontFeatureSettings="tnum" android:maxLines="1" android:text="@string/focus_widget_preview_time" />
         </FrameLayout>
         <ImageButton android:id="@+id/focus_widget_action" android:layout_width="52dp"
             android:layout_height="52dp" android:layout_marginStart="8dp"
@@ -25,7 +25,7 @@
             android:src="@drawable/focus_widget_play" android:contentDescription="@string/focus_start" />
     </LinearLayout>
     <TextView android:id="@+id/focus_widget_intent" android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:minHeight="24dp"
+        android:layout_height="24dp"
         android:text="@string/focus_widget_gentle" android:textColor="@color/focus_widget_secondary" android:textSize="13sp"
         android:maxLines="1" android:ellipsize="end" android:gravity="center_vertical" />
     <ProgressBar android:id="@+id/focus_widget_progress"

@@ -40,7 +40,7 @@ The macOS and Windows components are lightweight floating windows. The Android c
 
 | Desktop component | Android home-screen widget |
 | --- | --- |
-| ![Focus floating mini timer](docs/images/focus-mini.png) | ![Focus Android home-screen widget](docs/images/focus-android-widget.png) |
+| <img src="docs/images/focus-mini.png" width="360" alt="Focus floating mini timer" /><br /><br /><img src="docs/images/focus-mini-dark.png" width="360" alt="Focus floating mini timer in dark appearance" /> | <img src="docs/images/focus-android-widget.png" width="220" alt="Focus Android home-screen widget" /> |
 
 ## Download
 

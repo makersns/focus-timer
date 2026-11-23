@@ -22,9 +22,9 @@
 
 macOS / Windows は軽量なフローティングウィンドウ、Android はネイティブ AppWidget を使用します。ミニタイマーを隠しても計時は続き、毎秒の更新でほかのアプリのフォーカスを奪うことはありません。
 
-![Focus のデスクトップミニタイマー](images/focus-mini.png)
-
-![Focus の Android ホーム画面ウィジェット](images/focus-android-widget.png)
+| デスクトップミニタイマー | Android ホーム画面ウィジェット |
+| --- | --- |
+| <img src="images/focus-mini.png" width="360" alt="Focus のデスクトップミニタイマー" /><br /><br /><img src="images/focus-mini-dark.png" width="360" alt="Focus のダークテーマのデスクトップミニタイマー" /> | <img src="images/focus-android-widget.png" width="220" alt="Focus の Android ホーム画面ウィジェット" /> |
 
 ## ダウンロード
 

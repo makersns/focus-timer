@@ -22,9 +22,9 @@
 
 macOS / Windows에서는 가벼운 플로팅 창을, Android에서는 실제 AppWidget을 사용합니다. 미니 타이머를 숨겨도 시간이 계속 흐르며, 매초 업데이트가 다른 앱의 포커스를 빼앗지 않습니다.
 
-![Focus 데스크톱 미니 타이머](images/focus-mini.png)
-
-![Focus Android 홈 화면 위젯](images/focus-android-widget.png)
+| 데스크톱 미니 타이머 | Android 홈 화면 위젯 |
+| --- | --- |
+| <img src="images/focus-mini.png" width="360" alt="Focus 데스크톱 미니 타이머" /><br /><br /><img src="images/focus-mini-dark.png" width="360" alt="Focus 어두운 테마의 데스크톱 미니 타이머" /> | <img src="images/focus-android-widget.png" width="220" alt="Focus Android 홈 화면 위젯" /> |
 
 ## 다운로드
 

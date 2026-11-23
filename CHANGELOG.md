@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 · 2026-11-23
+## 0.1.0
 
 First independent desktop and Android release of Focus by Sugar.
 

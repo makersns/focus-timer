@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+ <string name="focus_widget_preview_time" translatable="false">25:00</string>
  <string name="focus_widget_title">Focus · Focus timer</string>
  <string name="focus_widget_description">A quiet focus timer on your home screen.</string>
  <string name="focus_mode">Focus</string>

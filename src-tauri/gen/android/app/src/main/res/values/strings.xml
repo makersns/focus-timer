@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">"Focus"</string>
-    <string name="main_activity_title">"Focus"</string>
+    <!-- The product name stays Focus in every language. -->
+    <string name="app_name" translatable="false">Focus</string>
+    <string name="main_activity_title" translatable="false">Focus</string>
 </resources>

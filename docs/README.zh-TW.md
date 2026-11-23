@@ -22,9 +22,9 @@
 
 macOS / Windows 的小元件是輕量懸浮視窗；Android 使用原生 AppWidget。隱藏桌面元件不會中斷計時，每秒更新也不會搶走其他應用程式的焦點。
 
-![Focus 桌面懸浮計時](images/focus-mini.png)
-
-![Focus Android 主畫面小工具](images/focus-android-widget.png)
+| 桌面懸浮元件 | Android 主畫面小工具 |
+| --- | --- |
+| <img src="images/focus-mini.png" width="360" alt="Focus 桌面懸浮計時" /><br /><br /><img src="images/focus-mini-dark.png" width="360" alt="Focus 深色桌面懸浮計時" /> | <img src="images/focus-android-widget.png" width="220" alt="Focus Android 主畫面小工具" /> |
 
 ## 下載
 

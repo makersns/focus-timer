@@ -71,7 +71,8 @@ object FocusController {
     fun serviceStarted(context: Context) {
         executor.execute {
             if (ticker == null || ticker!!.isCancelled) {
-                ticker = executor.scheduleAtFixedRate({
+                // Rust uses the elapsed-time deadline; never queue catch-up ticks after Android freezes a process.
+                ticker = executor.scheduleWithFixedDelay({
                     submit(context, JSONObject().put("type", "tick"))
                 }, 1, 1, TimeUnit.SECONDS)
             }
@@ -194,7 +195,8 @@ object FocusController {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         builder.setSmallIcon(R.drawable.focus_notification_icon).setContentTitle("Focus")
             .setContentIntent(open).setOngoing(true).setOnlyAlertOnce(true)
-            .setCategory(Notification.CATEGORY_STOPWATCH).setVisibility(Notification.VISIBILITY_PUBLIC)
+            .setCategory(if (Build.VERSION.SDK_INT >= 31) Notification.CATEGORY_STOPWATCH else Notification.CATEGORY_SERVICE)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
         val timer = snapshot?.optJSONObject("timer")
         if (timer != null && timer.optString("status") == "running") {
             builder.setContentText(modeLabel(local, timer.getString("mode")))

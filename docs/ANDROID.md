@@ -14,7 +14,7 @@ The source under `src-tauri/gen/android` is maintained application code. **Do no
 
 ## Add and use the widget
 
-Open Focus, then choose **Add home-screen widget** in Settings. On launchers that support pinned widgets, Android asks where to place it. You can also long-press the home screen, open the launcher’s widget picker, and choose Focus. A successful pin request means the launcher showed the request; the user still controls whether a widget is added.
+Open Focus, then choose **Add widget** in the top toolbar or the home-screen widget action in Settings. On launchers that support pinned widgets, Android asks where to place it. You can also long-press the home screen, open the launcher’s widget picker, and choose Focus. A successful pin request means the launcher showed the request; the user still controls whether a widget is added.
 
 The resizable widget shows a large countdown, the current focus or break mode, the session intention, a progress line, and a pause/resume button. Tap the time or title to open the app. Multiple Focus widgets share the same session. The widget follows the app’s language and light/dark/system appearance preferences; Simplified Chinese, Traditional Chinese, English, Japanese, and Korean are included.
 
@@ -52,6 +52,19 @@ node scripts/android-build.mjs --debug --test
 The macOS helper can also use the ignored `.data/native-build.json` dedicated build volume. Machine-specific paths and SDK `local.properties` are never committed. CI uses the same versions and standard environment variables.
 
 The debug APK is reported by the script and normally appears under `src-tauri/gen/android/app/build/outputs/apk/universal/debug/`. It is for testing only. JVM test reports remain under `src-tauri/gen/android/app/build/reports/tests/`; a build summary is written to the ignored `native-evidence/android/` folder. Rust unit tests cover same-boot recovery, sleep expiry, reboot pause, duplicate completion, legacy migration, corrupt state, and stale saves.
+
+## Verified Android behavior
+
+The Android integration was exercised on a dedicated Pixel 7 emulator running API 36 with a 16 KB page-size system image. This is emulator evidence, not a claim of testing on every handset or Android version.
+
+- Install and cold start open the actual Tauri Activity and Rust-backed application. The system status and gesture areas remain clear of the main controls.
+- Android's pin confirmation adds a real launcher widget. The recommended size is 4 × 2 cells; launcher grids and user resizing can change its final dimensions.
+- Starting in the app, pausing in the widget, and resuming in the widget operate on the same session ID. A paused countdown remains unchanged.
+- Killing only the running app process lets Android restart its foreground service without an Activity. The restored native timer keeps the same session and deadline during the same boot.
+- A real one-minute focus round completes once: one completed history record, one daily completed session, and exactly 60,000 milliseconds of focus time. The widget stays at a static `00:00` after expiry.
+- The completed widget's next action starts the appropriate break, matching the main app's primary action.
+
+The source also includes Rust recovery and validation tests, plus JVM tests for countdown rounding and bounded progress. Release installers are separately signed and checked from the recorded source commit; debug APKs are never published as downloads.
 
 ## Release signing
 
