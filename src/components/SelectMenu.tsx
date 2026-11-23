@@ -25,12 +25,14 @@ export function SelectMenu<Value extends string>({ id, labelId, value, options, 
   const [activeIndex, setActiveIndex] = useState(0);
   const [placement, setPlacement] = useState<CSSProperties | null>(null);
   const search = useRef({ text: "", at: 0 });
+  const needsFocus = useRef(false);
   const selectedIndex = Math.max(0, options.findIndex(option => option.value === value));
   const selected = options[selectedIndex];
   const listboxId = id + "-listbox";
 
   const close = useCallback((restoreFocus = true) => {
     setOpen(false);
+    needsFocus.current = false;
     search.current = { text: "", at: 0 };
     if (restoreFocus) trigger.current?.focus({ preventScroll: true });
   }, []);
@@ -39,6 +41,7 @@ export function SelectMenu<Value extends string>({ id, labelId, value, options, 
     if (disabled || options.length === 0) return;
     setHost(trigger.current?.closest("dialog") ?? document.body);
     setActiveIndex(index);
+    needsFocus.current = true;
     setPlacement(null);
     setOpen(true);
   }
@@ -98,10 +101,16 @@ export function SelectMenu<Value extends string>({ id, labelId, value, options, 
       frame = requestAnimationFrame(measure);
     };
 
+    const onScroll = (event: Event) => {
+      // Scrolling the options does not move their anchor. Repositioning here
+      // would scroll the active option back into view during a touch gesture.
+      if (event.target instanceof Node && menu.contains(event.target)) return;
+      schedule();
+    };
+
     measure();
-    menu.focus({ preventScroll: true });
     window.addEventListener("resize", schedule);
-    window.addEventListener("scroll", schedule, true);
+    window.addEventListener("scroll", onScroll, true);
     window.visualViewport?.addEventListener("resize", schedule);
     window.visualViewport?.addEventListener("scroll", schedule);
     const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
@@ -112,7 +121,7 @@ export function SelectMenu<Value extends string>({ id, labelId, value, options, 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", schedule);
-      window.removeEventListener("scroll", schedule, true);
+      window.removeEventListener("scroll", onScroll, true);
       window.visualViewport?.removeEventListener("resize", schedule);
       window.visualViewport?.removeEventListener("scroll", schedule);
       observer?.disconnect();
@@ -122,8 +131,15 @@ export function SelectMenu<Value extends string>({ id, labelId, value, options, 
   useLayoutEffect(() => {
     if (!open || !placement) return;
     const menu = listbox.current;
+    if (!menu) return;
+    // The first render is hidden until measured; focus only after that visible
+    // placement is committed, and never steal focus on subsequent repositioning.
+    if (needsFocus.current) {
+      needsFocus.current = false;
+      menu.focus({ preventScroll: true });
+    }
     const option = document.getElementById(listboxId + "-option-" + activeIndex);
-    if (!menu || !option) return;
+    if (!option) return;
     const top = option.offsetTop;
     const bottom = top + option.offsetHeight;
     if (top < menu.scrollTop) menu.scrollTop = Math.max(0, top - 6);
