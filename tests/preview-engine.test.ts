@@ -204,3 +204,64 @@ describe("version-1 mini timer preference migration", () => {
     }
   });
 });
+
+describe("version-1 reminder preferences", () => {
+  it("keeps existing audible notifications and a paused round when upgrading old data", () => {
+    const e = started();
+    e.tick(T0 + 60_000);
+    e.dispatch({ type: "start" }, T0 + 70_000);
+    e.dispatch({ type: "pause" }, T0 + 80_000);
+    const before = e.snapshot();
+    const legacy = JSON.parse(e.serialize());
+    legacy.preferences.notificationsEnabled = true;
+    delete legacy.preferences.soundEnabled;
+    const restored = new PreviewEngine(T0 + 86_400_000, JSON.stringify(legacy)).snapshot();
+    expect(restored.preferences).toMatchObject({ notificationsEnabled: true, soundEnabled: true });
+    expect(restored.timer).toEqual(before.timer);
+    expect(restored.history).toEqual(before.history);
+    expect(restored.dailyStats).toEqual(before.dailyStats);
+  });
+  it("preserves an explicit silent reminder and rejects malformed sound preferences", () => {
+    const e = started();
+    const preferences = { ...e.snapshot().preferences, notificationsEnabled: true, soundEnabled: false };
+    e.updatePreferences(preferences, T0 + 10_000);
+    expect(e.snapshot().timer.remainingMs).toBe(50_000);
+    expect(decodePreview(e.serialize()).preferences.soundEnabled).toBe(false);
+    for (const soundEnabled of ["false", 0, null]) {
+      expect(() => decodePreview(JSON.stringify({
+        ...e.snapshot(), preferences: { ...preferences, soundEnabled },
+      }))).toThrow("invalid_storage");
+    }
+  });
+});
+
+describe("widget style migration and live changes", () => {
+  it("migrates an older paused timer to ring without changing time, history or reminders", () => {
+    const e = started(); e.tick(T0 + 60_000);
+    e.dispatch({ type: "start" }, T0 + 70_000); e.dispatch({ type: "pause" }, T0 + 80_000);
+    const before = e.snapshot();
+    const old = JSON.parse(e.serialize()); delete old.preferences.miniTimerStyle;
+    const after = new PreviewEngine(T0 + 90_000, JSON.stringify(old)).snapshot();
+    expect(after.preferences.miniTimerStyle).toBe("ring");
+    expect(after.timer).toEqual(before.timer);
+    expect(after.history).toEqual(before.history);
+    expect(after.preferences.notificationsEnabled).toBe(before.preferences.notificationsEnabled);
+    expect(after.preferences.soundEnabled).toBe(before.preferences.soundEnabled);
+  });
+  it("switches all three styles during a round without changing its identity or deadline", () => {
+    const e = started(180);
+    const before = e.snapshot();
+    for (const miniTimerStyle of ["ring", "tomato", "capsule"] as const) {
+      e.updatePreferences({ ...e.snapshot().preferences, miniTimerStyle }, T0 + 1_000);
+      expect(e.snapshot().preferences.miniTimerStyle).toBe(miniTimerStyle);
+      expect(e.snapshot().timer).toMatchObject({ runId: before.timer.runId, deadlineAt: before.timer.deadlineAt, status: "running", remainingMs: 180 * 60_000 - 1_000 });
+      expect(e.snapshot().history).toEqual(before.history);
+      expect(decodePreview(e.serialize()).preferences.miniTimerStyle).toBe(miniTimerStyle);
+    }
+  });
+  it("rejects a present invalid style instead of silently resetting it", () => {
+    for (const miniTimerStyle of ["classic", "", 1, null]) expect(() => decodePreview(JSON.stringify({
+      ...engine().snapshot(), preferences: { ...DEFAULT_PREFERENCES, miniTimerStyle },
+    }))).toThrow("invalid_storage");
+  });
+});

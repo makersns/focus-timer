@@ -1,15 +1,16 @@
 use std::{
     sync::{
         atomic::{AtomicBool, AtomicU64, Ordering},
-        Mutex,
+        Arc, Mutex,
     },
     thread,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
+use crate::desktop_alerts::{NotificationService, NotificationStatus, NotificationTestResult};
 use crate::storage::Store;
 use crate::timer::{
-    Engine, Preferences, Snapshot, TimerAction, TimerMode, TimerStatus, Transition,
+    Engine, MiniTimerStyle, Preferences, Snapshot, TimerAction, TimerMode, TimerStatus, Transition,
 };
 use serde::{Deserialize, Serialize};
 use tauri::{
@@ -17,7 +18,6 @@ use tauri::{
     tray::TrayIconBuilder,
     AppHandle, Emitter, Manager, RunEvent, Theme, WebviewUrl, WebviewWindowBuilder, WindowEvent,
 };
-use tauri_plugin_notification::NotificationExt;
 
 #[cfg(target_os = "macos")]
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconEvent};
@@ -25,6 +25,7 @@ use tauri::tray::{MouseButton, MouseButtonState, TrayIconEvent};
 const SNAPSHOT_EVENT: &str = "focus://snapshot";
 
 struct AppState {
+    alerts: Arc<NotificationService>,
     engine: Mutex<Engine>,
     // The engine is never held while a store write or any native UI call runs.
     store: Mutex<Option<Store>>,
@@ -32,8 +33,8 @@ struct AppState {
     tray: Mutex<Option<TrayControls>>,
     tray_summary: Mutex<String>,
     tray_ready: AtomicBool,
+    mini_ready: AtomicBool,
     native_preferences: Mutex<Option<NativePreferences>>,
-    popover_last_blur: AtomicU64,
     shutting_down: AtomicBool,
     system_locale: String,
 }
@@ -137,7 +138,7 @@ where
         // Frontends reject out-of-order revisions. A concurrently completed
         // command may legitimately make this snapshot newer than our operation.
         let _ = app.emit(SNAPSHOT_EVENT, &snapshot);
-        refresh_tray(app, &snapshot);
+        refresh_tray(app);
     }
 
     if let Some(completed) = pending.transition.completed {
@@ -148,16 +149,68 @@ where
                 TimerMode::Focus => text.focus_complete,
                 TimerMode::ShortBreak | TimerMode::LongBreak => text.break_complete,
             };
-            // Notification errors must not affect timing, state, or persistence.
-            let _ = app
-                .notification()
-                .builder()
-                .title("Focus")
-                .body(body)
-                .show();
+            state.alerts.completed(
+                app.clone(),
+                &completed.id,
+                body,
+                snapshot.preferences.sound_enabled,
+            );
         }
     }
     Ok(snapshot)
+}
+
+#[tauri::command]
+async fn get_notification_status(
+    app: AppHandle,
+    sound: bool,
+) -> Result<NotificationStatus, String> {
+    let service = Arc::clone(&app.state::<AppState>().alerts);
+    tauri::async_runtime::spawn_blocking(move || service.status(sound))
+        .await
+        .map_err(|_| "notification_service_unavailable".to_owned())?
+}
+
+#[tauri::command]
+async fn request_notification_permission(
+    app: AppHandle,
+    sound: bool,
+) -> Result<NotificationStatus, String> {
+    let service = Arc::clone(&app.state::<AppState>().alerts);
+    tauri::async_runtime::spawn_blocking(move || service.request_permission(sound))
+        .await
+        .map_err(|_| "notification_service_unavailable".to_owned())?
+}
+
+#[tauri::command]
+async fn open_notification_settings(app: AppHandle, sound: bool) -> Result<(), String> {
+    let service = Arc::clone(&app.state::<AppState>().alerts);
+    tauri::async_runtime::spawn_blocking(move || service.open_settings(sound))
+        .await
+        .map_err(|_| "notification_service_unavailable".to_owned())?
+}
+
+#[tauri::command]
+async fn test_notification(app: AppHandle, sound: bool) -> Result<NotificationTestResult, String> {
+    let state = app.state::<AppState>();
+    let preference = state
+        .engine
+        .lock()
+        .map_err(|_| "timer_unavailable")?
+        .snapshot()
+        .preferences
+        .language;
+    let body = match locale(&preference, &state.system_locale) {
+        "zh-CN" => "这是一条测试提醒。计时结束时，Focus 会在这里提醒你。",
+        "zh-TW" => "這是一則測試提醒。計時結束時，Focus 會在這裡提醒你。",
+        "ja" => "テスト通知です。タイマーが終了すると、ここでお知らせします。",
+        "ko" => "테스트 알림입니다. 타이머가 끝나면 여기에서 알려드려요.",
+        _ => "A test reminder. Focus will notify you here when your timer finishes.",
+    };
+    let service = Arc::clone(&state.alerts);
+    tauri::async_runtime::spawn_blocking(move || service.test(sound, body))
+        .await
+        .map_err(|_| "notification_service_unavailable".to_owned())?
 }
 
 #[tauri::command]
@@ -172,7 +225,8 @@ fn timer_action(app: AppHandle, action: TimerAction) -> Result<Snapshot, String>
 
 #[tauri::command]
 fn update_preferences(app: AppHandle, preferences: Preferences) -> Result<Snapshot, String> {
-    if preferences.mini_timer_enabled && app.get_webview_window("mini").is_none() {
+    if preferences.mini_timer_enabled && !app.state::<AppState>().mini_ready.load(Ordering::Acquire)
+    {
         return Err("desktop_widget_unavailable".to_owned());
     }
     let snapshot = apply(&app, |engine, now| {
@@ -210,7 +264,7 @@ struct AndroidTimerStatus {
 fn get_runtime_info(app: AppHandle) -> RuntimeInfo {
     RuntimeInfo {
         platform: std::env::consts::OS,
-        desktop_widget: app.get_webview_window("mini").is_some(),
+        desktop_widget: app.state::<AppState>().mini_ready.load(Ordering::Acquire),
         home_screen_widget: false,
         tray: app.state::<AppState>().tray_ready.load(Ordering::Acquire),
     }
@@ -243,7 +297,7 @@ fn request_exact_alarm_permission() -> WidgetRequest {
 }
 
 fn set_mini_visible(app: &AppHandle, visible: bool) -> Result<Snapshot, String> {
-    if app.get_webview_window("mini").is_none() {
+    if !app.state::<AppState>().mini_ready.load(Ordering::Acquire) {
         return Err("desktop_widget_unavailable".to_owned());
     }
     let snapshot = apply(app, |engine, now| {
@@ -261,6 +315,28 @@ fn set_mini_timer_visible(app: AppHandle, visible: bool) -> Result<Snapshot, Str
     set_mini_visible(&app, visible)
 }
 
+#[cfg(target_os = "macos")]
+fn close_native_widget(app: &AppHandle) {
+    let _ = set_mini_visible(app, false);
+}
+
+#[tauri::command]
+fn start_widget_drag(app: AppHandle, window: tauri::WebviewWindow) -> Result<(), String> {
+    if window.label() != "mini" || !app.state::<AppState>().mini_ready.load(Ordering::Acquire) {
+        return Err("desktop_widget_unavailable".to_owned());
+    }
+    #[cfg(target_os = "macos")]
+    {
+        crate::macos_widget::drag(&app)
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        window
+            .start_dragging()
+            .map_err(|_| "widget_drag_unavailable".to_owned())
+    }
+}
+
 #[tauri::command]
 fn show_main_window(app: AppHandle) {
     hide_popover(&app);
@@ -268,9 +344,10 @@ fn show_main_window(app: AppHandle) {
 }
 
 fn hide_popover(app: &AppHandle) {
-    if let Some(window) = app.get_webview_window("tray") {
-        let _ = window.hide();
-    }
+    #[cfg(target_os = "macos")]
+    crate::macos_popover::hide(app);
+    #[cfg(not(target_os = "macos"))]
+    let _ = app;
 }
 
 #[tauri::command]
@@ -291,6 +368,7 @@ struct NativePreferences {
     theme: String,
     mini_enabled: bool,
     mini_on_top: bool,
+    mini_style: MiniTimerStyle,
 }
 
 impl From<&Preferences> for NativePreferences {
@@ -299,6 +377,7 @@ impl From<&Preferences> for NativePreferences {
             theme: preferences.theme.clone(),
             mini_enabled: preferences.mini_timer_enabled,
             mini_on_top: preferences.mini_timer_always_on_top,
+            mini_style: preferences.mini_timer_style,
         }
     }
 }
@@ -316,6 +395,63 @@ fn schedule_native_preferences(app: &AppHandle, explicit_show: bool) {
     let _ = app.run_on_main_thread(move || sync_native_preferences(&handle, explicit_show));
 }
 
+fn mini_size(style: MiniTimerStyle) -> (f64, f64) {
+    match style {
+        MiniTimerStyle::Ring => (260.0, 260.0),
+        MiniTimerStyle::Tomato => (260.0, 280.0),
+        MiniTimerStyle::Capsule => (340.0, 112.0),
+    }
+}
+
+#[cfg(any(not(target_os = "macos"), test))]
+fn clamp_widget_origin(
+    origin: (f64, f64),
+    size: (f64, f64),
+    work: (f64, f64, f64, f64),
+) -> (f64, f64) {
+    let min_x = work.0 + 12.0;
+    let min_y = work.1 + 12.0;
+    let max_x = (work.0 + work.2 - size.0 - 12.0).max(min_x);
+    let max_y = (work.1 + work.3 - size.1 - 12.0).max(min_y);
+    (origin.0.clamp(min_x, max_x), origin.1.clamp(min_y, max_y))
+}
+
+#[cfg(not(target_os = "macos"))]
+fn resize_mini(mini: &tauri::WebviewWindow, style: MiniTimerStyle) {
+    let size = mini_size(style);
+    let previous_scale = mini.scale_factor().unwrap_or(1.0);
+    let previous_origin = mini.outer_position().ok().map(|point| {
+        (
+            point.x as f64 / previous_scale,
+            point.y as f64 / previous_scale,
+        )
+    });
+    let monitor = mini
+        .current_monitor()
+        .ok()
+        .flatten()
+        .or_else(|| mini.primary_monitor().ok().flatten());
+    let _ = mini.set_size(tauri::LogicalSize::new(size.0, size.1));
+    if let Some(monitor) = monitor {
+        let scale = monitor.scale_factor();
+        let work = monitor.work_area();
+        let logical_work = (
+            work.position.x as f64 / scale,
+            work.position.y as f64 / scale,
+            work.size.width as f64 / scale,
+            work.size.height as f64 / scale,
+        );
+        let origin = previous_origin.unwrap_or((
+            logical_work.0 + logical_work.2 - size.0 - 24.0,
+            logical_work.1 + 24.0,
+        ));
+        let (x, y) = clamp_widget_origin(origin, size, logical_work);
+        // Logical coordinates avoid interpreting a new display's physical pixels
+        // with the scale factor of the window's previous display.
+        let _ = mini.set_position(tauri::LogicalPosition::new(x, y));
+    }
+}
+
 fn sync_native_preferences(app: &AppHandle, explicit_show: bool) {
     let state = app.state::<AppState>();
     let Ok(engine) = state.engine.lock() else {
@@ -329,27 +465,48 @@ fn sync_native_preferences(app: &AppHandle, explicit_show: bool) {
     let previous = applied.replace(next.clone());
     drop(applied);
     let theme_changed = previous.as_ref().is_none_or(|old| old.theme != next.theme);
-    let pin_changed = previous
-        .as_ref()
-        .is_none_or(|old| old.mini_on_top != next.mini_on_top);
-    let visibility_changed = previous
-        .as_ref()
-        .is_none_or(|old| old.mini_enabled != next.mini_enabled);
-
     if theme_changed {
         for window in app.webview_windows().values() {
             let _ = window.set_theme(selected_theme(&next.theme));
         }
+        #[cfg(target_os = "macos")]
+        crate::macos_popover::set_theme(app, selected_theme(&next.theme));
     }
-    if let Some(mini) = app.get_webview_window("mini") {
-        if pin_changed {
-            let _ = mini.set_always_on_top(next.mini_on_top);
+    if state.mini_ready.load(Ordering::Acquire) {
+        #[cfg(target_os = "macos")]
+        if let Err(error) = crate::macos_widget::sync(
+            selected_theme(&next.theme),
+            mini_size(next.mini_style),
+            next.mini_on_top,
+            next.mini_enabled,
+            explicit_show,
+        ) {
+            eprintln!("Focus: native widget unavailable ({error}).");
         }
-        if visibility_changed || explicit_show {
-            if next.mini_enabled {
-                let _ = mini.show();
-            } else {
-                let _ = mini.hide();
+        #[cfg(not(target_os = "macos"))]
+        if let Some(mini) = app.get_webview_window("mini") {
+            if previous
+                .as_ref()
+                .is_none_or(|old| old.mini_style != next.mini_style)
+            {
+                resize_mini(&mini, next.mini_style);
+            }
+            if previous
+                .as_ref()
+                .is_none_or(|old| old.mini_on_top != next.mini_on_top)
+            {
+                let _ = mini.set_always_on_top(next.mini_on_top);
+            }
+            if explicit_show
+                || previous
+                    .as_ref()
+                    .is_none_or(|old| old.mini_enabled != next.mini_enabled)
+            {
+                if next.mini_enabled {
+                    let _ = mini.show();
+                } else {
+                    let _ = mini.hide();
+                }
             }
         }
     }
@@ -360,27 +517,47 @@ fn sync_native_preferences(app: &AppHandle, explicit_show: bool) {
 fn setup_auxiliary_windows(app: &AppHandle) -> tauri::Result<()> {
     // Tauri warns that creating a webview in a synchronous command or event
     // handler can deadlock on Windows. Create each hidden surface once in setup.
-    WebviewWindowBuilder::new(app, "mini", WebviewUrl::App("index.html?view=mini".into()))
-        .title("Focus — Mini")
-        .inner_size(360.0, 176.0)
-        .min_inner_size(320.0, 160.0)
-        .resizable(false)
-        .maximizable(false)
-        .minimizable(false)
-        .decorations(false)
-        .transparent(true)
-        .background_color(tauri::window::Color(0, 0, 0, 0))
-        .shadow(false)
-        .no_redirection_bitmap(true)
-        .skip_taskbar(true)
-        .focused(false)
-        .visible(false)
-        .build()?;
+    let mini =
+        WebviewWindowBuilder::new(app, "mini", WebviewUrl::App("index.html?view=mini".into()))
+            .title("Focus — Mini")
+            .accept_first_mouse(true)
+            .inner_size(260.0, 260.0)
+            .min_inner_size(100.0, 80.0)
+            .resizable(false)
+            .maximizable(false)
+            .minimizable(false)
+            .decorations(false)
+            .transparent(true)
+            .background_color(tauri::window::Color(0, 0, 0, 0))
+            .shadow(false)
+            .no_redirection_bitmap(true)
+            .skip_taskbar(true)
+            .focused(false)
+            .visible(false)
+            .build()?;
+
+    #[cfg(target_os = "macos")]
+    let mini_ready = match crate::macos_widget::initialize(&mini, close_native_widget) {
+        Ok(()) => true,
+        Err(error) => {
+            eprintln!("Focus: native widget could not initialize ({error}).");
+            false
+        }
+    };
+    #[cfg(not(target_os = "macos"))]
+    let mini_ready = {
+        let _ = mini;
+        true
+    };
+    app.state::<AppState>()
+        .mini_ready
+        .store(mini_ready, Ordering::Release);
 
     #[cfg(target_os = "macos")]
     WebviewWindowBuilder::new(app, "tray", WebviewUrl::App("index.html?view=tray".into()))
         .title("Focus — Menu")
-        .inner_size(280.0, 276.0)
+        .inner_size(264.0, 252.0)
+        .initialization_script("document.addEventListener('DOMContentLoaded', () => { document.documentElement.dataset.nativePopover = 'true'; });")
         .resizable(false)
         .maximizable(false)
         .minimizable(false)
@@ -396,69 +573,18 @@ fn setup_auxiliary_windows(app: &AppHandle) -> tauri::Result<()> {
     Ok(())
 }
 
-#[cfg(any(target_os = "macos", test))]
-fn popover_position(
-    icon: (f64, f64, f64, f64),
-    work: (f64, f64, f64, f64),
-    scale: f64,
-) -> (f64, f64, f64) {
-    let width = 280.0 * scale;
-    let height = 276.0 * scale;
-    let margin = 6.0 * scale;
-    let icon_center = icon.0 + icon.2 / 2.0;
-    let min_x = work.0 + margin;
-    let max_x = (work.0 + work.2 - width - margin).max(min_x);
-    let min_y = work.1;
-    let max_y = (work.1 + work.3 - height - margin).max(min_y);
-    let x = (icon_center - width / 2.0).clamp(min_x, max_x);
-    let y = (icon.1 + icon.3 + 2.0 * scale).clamp(min_y, max_y);
-    let arrow_x = ((icon_center - x) / scale).clamp(20.0, 260.0);
-    (x, y, arrow_x)
-}
-
 #[cfg(target_os = "macos")]
-fn toggle_popover(app: &AppHandle, rect: tauri::Rect, position: tauri::PhysicalPosition<f64>) {
-    let Some(window) = app.get_webview_window("tray") else {
+fn toggle_popover(app: &AppHandle) {
+    let theme = app
+        .state::<AppState>()
+        .engine
+        .lock()
+        .ok()
+        .and_then(|engine| selected_theme(&engine.snapshot().preferences.theme));
+    if let Err(error) = crate::macos_popover::toggle(app, theme) {
+        eprintln!("Focus: menu popover unavailable ({error}).");
         show_main(app);
-        return;
-    };
-    if window.is_visible().unwrap_or(false) {
-        let _ = window.hide();
-        return;
     }
-    // Clicking the status item may blur the popover immediately before the
-    // tray's MouseUp event. Treat that one click as dismissal, not reopening.
-    let state = app.state::<AppState>();
-    let hidden = state.popover_last_blur.load(Ordering::Acquire);
-    let now = now_ms().max(0) as u64;
-    if hidden != 0 && now >= hidden && now - hidden < 180 {
-        return;
-    }
-    if let Ok(Some(monitor)) = window.monitor_from_point(position.x, position.y) {
-        let scale = monitor.scale_factor();
-        let origin = rect.position.to_physical::<f64>(scale);
-        let size = rect.size.to_physical::<f64>(scale);
-        let work = monitor.work_area();
-        let (x, y, arrow_x) = popover_position(
-            (origin.x, origin.y, size.width, size.height),
-            (
-                work.position.x as f64,
-                work.position.y as f64,
-                work.size.width as f64,
-                work.size.height as f64,
-            ),
-            scale,
-        );
-        let _ = window.set_position(tauri::PhysicalPosition::new(x as i32, y as i32));
-        // The HTML card has an 8 px transparent gutter inside this window.
-        let arrow_x = arrow_x - 8.0;
-        // Numeric, bounded geometry only; no user text is evaluated.
-        let _ = window.eval(format!(
-            "document.documentElement.style.setProperty('--tray-arrow-x', '{arrow_x}px')"
-        ));
-    }
-    let _ = window.show();
-    let _ = window.set_focus();
 }
 
 #[tauri::command]
@@ -692,7 +818,7 @@ fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
         .cloned()
         .ok_or_else(|| tauri::Error::Io(std::io::Error::other("tray_icon_unavailable")))?;
     #[cfg(target_os = "macos")]
-    let icon = menu_bar_icon();
+    let icon = menu_bar_icon(menu_bar_progress(&snapshot));
     TrayIconBuilder::with_id("focus")
         .icon(icon)
         .tooltip("Focus")
@@ -721,12 +847,10 @@ fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
             if let TrayIconEvent::Click {
                 button: MouseButton::Left,
                 button_state: MouseButtonState::Up,
-                rect,
-                position,
                 ..
             } = event
             {
-                toggle_popover(tray.app_handle(), rect, position);
+                toggle_popover(tray.app_handle());
             }
             #[cfg(not(target_os = "macos"))]
             let _ = (tray, event);
@@ -736,11 +860,27 @@ fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
         *tray = Some(controls);
     }
     state.tray_ready.store(true, Ordering::Release);
-    refresh_tray(app, &snapshot);
+    refresh_tray(app);
     Ok(())
 }
 
-fn refresh_tray(app: &AppHandle, snapshot: &Snapshot) {
+fn refresh_tray(app: &AppHandle) {
+    let handle = app.clone();
+    let _ = app.run_on_main_thread(move || {
+        // Read at execution time, not when the clock or a command queues work.
+        // A delayed running snapshot must never overwrite a newer paused state.
+        let snapshot = {
+            let state = handle.state::<AppState>();
+            let snapshot = state.engine.lock().ok().map(|engine| engine.snapshot());
+            snapshot
+        };
+        if let Some(snapshot) = snapshot {
+            render_tray(&handle, &snapshot);
+        }
+    });
+}
+
+fn render_tray(app: &AppHandle, snapshot: &Snapshot) {
     let state = app.state::<AppState>();
     let language = locale(&snapshot.preferences.language, &state.system_locale);
     let text = words(language);
@@ -783,7 +923,14 @@ fn refresh_tray(app: &AppHandle, snapshot: &Snapshot) {
     if let Some(tray) = app.tray_by_id("focus") {
         let _ = tray.set_tooltip(Some(format!("Focus — {}", summary)));
         #[cfg(target_os = "macos")]
-        let _ = tray.set_title(Some(tray_title(snapshot)));
+        {
+            let _ = tray.set_title(Some(tray_title(snapshot)));
+            static LAST_RING_PROGRESS: AtomicU64 = AtomicU64::new(u64::MAX);
+            let progress = menu_bar_progress(snapshot);
+            if LAST_RING_PROGRESS.swap(progress as u64, Ordering::AcqRel) != progress as u64 {
+                let _ = tray.set_icon(Some(menu_bar_icon(progress)));
+            }
+        }
     }
 }
 
@@ -798,21 +945,68 @@ fn tray_title(snapshot: &Snapshot) -> String {
     format!("{prefix}{:02}:{:02}", seconds / 60, seconds % 60)
 }
 
-#[cfg(target_os = "macos")]
-fn menu_bar_icon() -> tauri::image::Image<'static> {
+#[cfg(any(target_os = "macos", test))]
+fn menu_bar_progress(snapshot: &Snapshot) -> u16 {
+    let timer = &snapshot.timer;
+    if timer.duration_ms <= 0 {
+        return 0;
+    }
+    if timer.status == TimerStatus::Completed {
+        return 360;
+    }
+    // Digits count down; the orange ring fills as time is completed.
+    let elapsed = timer.duration_ms - timer.remaining_ms.clamp(0, timer.duration_ms);
+    ((elapsed as i128 * 360 + timer.duration_ms as i128 / 2) / timer.duration_ms as i128) as u16
+}
+
+#[cfg(any(target_os = "macos", test))]
+fn menu_bar_icon_pixels(progress: u16) -> Vec<u8> {
+    use std::f64::consts::TAU;
+
     let size = 32;
+    let radius = 10.5;
+    let sweep = progress.min(360) as f64 / 360.0 * TAU;
+    let end = (sweep.sin() * radius, -sweep.cos() * radius);
+    let orange = [233.0, 158.0, 114.0];
+    // A neutral track stays visible on both light and dark menu bars.
+    let track = [145.0, 142.0, 134.0];
     let mut pixels = vec![0u8; (size * size * 4) as usize];
     for y in 0..size {
         for x in 0..size {
             let dx = x as f64 + 0.5 - 16.0;
             let dy = y as f64 + 0.5 - 16.0;
-            let distance = (dx * dx + dy * dy).sqrt();
-            let coverage = (2.0 - (distance - 10.0).abs()).clamp(0.0, 1.0);
-            let i = ((y * size + x) * 4) as usize;
-            pixels[i..i + 4].copy_from_slice(&[233, 158, 114, (coverage * 255.0) as u8]);
+            let distance = dx.hypot(dy);
+            let ring_distance = (distance - radius).abs();
+            let track_coverage = (2.0 - ring_distance).clamp(0.0, 1.0);
+            let angle = dx.atan2(-dy).rem_euclid(TAU);
+            let arc_distance = if progress >= 360 || angle <= sweep {
+                ring_distance
+            } else {
+                dx.hypot(dy + radius).min((dx - end.0).hypot(dy - end.1))
+            };
+            let active = if progress == 0 {
+                0.0
+            } else {
+                (2.0 - arc_distance).clamp(0.0, 1.0)
+            };
+            let base = track_coverage * 0.7 * (1.0 - active);
+            let alpha = active + base;
+            let index = ((y * size + x) * 4) as usize;
+            if alpha > 0.0 {
+                for channel in 0..3 {
+                    pixels[index + channel] =
+                        ((orange[channel] * active + track[channel] * base) / alpha).round() as u8;
+                }
+                pixels[index + 3] = (alpha * 255.0).round() as u8;
+            }
         }
     }
-    tauri::image::Image::new_owned(pixels, size, size)
+    pixels
+}
+
+#[cfg(target_os = "macos")]
+fn menu_bar_icon(progress: u16) -> tauri::image::Image<'static> {
+    tauri::image::Image::new_owned(menu_bar_icon_pixels(progress), 32, 32)
 }
 
 pub fn run() {
@@ -824,6 +1018,10 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .invoke_handler(tauri::generate_handler![
             get_snapshot,
+            get_notification_status,
+            request_notification_permission,
+            open_notification_settings,
+            test_notification,
             timer_action,
             update_preferences,
             clear_history,
@@ -833,6 +1031,7 @@ pub fn run() {
             get_android_timer_status,
             request_exact_alarm_permission,
             set_mini_timer_visible,
+            start_widget_drag,
             show_main_window,
             hide_tray_popover,
             quit_app
@@ -850,14 +1049,15 @@ pub fn run() {
                 _ => engine.set_persistence_error(true),
             }
             app.manage(AppState {
+                alerts: Arc::new(NotificationService::new(app.handle())),
                 engine: Mutex::new(engine),
                 store: Mutex::new(store),
                 persistence_report_revision: AtomicU64::new(0),
                 tray: Mutex::new(None),
                 tray_summary: Mutex::new(String::new()),
                 tray_ready: AtomicBool::new(false),
+                mini_ready: AtomicBool::new(false),
                 native_preferences: Mutex::new(None),
-                popover_last_blur: AtomicU64::new(0),
                 shutting_down: AtomicBool::new(false),
                 system_locale: sys_locale::get_locale().unwrap_or_else(|| "en".to_owned()),
             });
@@ -896,18 +1096,11 @@ pub fn run() {
                 return;
             };
             if window.label() == "tray" {
-                match event {
-                    WindowEvent::Focused(false) => {
-                        state
-                            .popover_last_blur
-                            .store(now_ms().max(0) as u64, Ordering::Release);
-                        let _ = window.hide();
-                    }
-                    WindowEvent::CloseRequested { api, .. } => {
-                        api.prevent_close();
-                        let _ = window.hide();
-                    }
-                    _ => {}
+                // Its content is hosted by NSPopover. The hidden Tauri window's
+                // focus events do not describe the actual menu's visibility.
+                if let WindowEvent::CloseRequested { api, .. } = event {
+                    api.prevent_close();
+                    hide_popover(app);
                 }
                 return;
             }
@@ -951,9 +1144,9 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::{
-        locale, popover_position, report_persistence, toggle_timer_transition, tray_title,
-        AtomicU64, Engine, ExternalTarget, Mutex, NativePreferences, TimerAction, TimerMode,
-        TimerStatus,
+        clamp_widget_origin, locale, menu_bar_icon_pixels, menu_bar_progress, mini_size,
+        report_persistence, toggle_timer_transition, tray_title, AtomicU64, Engine, ExternalTarget,
+        MiniTimerStyle, Mutex, NativePreferences, TimerAction, TimerMode, TimerStatus,
     };
 
     #[test]
@@ -1009,15 +1202,51 @@ mod tests {
     }
 
     #[test]
-    fn tray_panel_stays_on_negative_origin_retina_monitor() {
-        let (x, y, arrow) = popover_position(
-            (-60.0, -40.0, 40.0, 40.0),
-            (-2880.0, 0.0, 2880.0, 1700.0),
-            2.0,
+    fn resizing_widgets_preserves_visibility_on_negative_origin_displays() {
+        let work = (-1440.0, 25.0, 1440.0, 875.0);
+        let origin = clamp_widget_origin((-80.0, 790.0), mini_size(MiniTimerStyle::Tomato), work);
+        assert_eq!(origin, (-272.0, 608.0));
+        assert_eq!(
+            clamp_widget_origin((-1000.0, 100.0), mini_size(MiniTimerStyle::Capsule), work),
+            (-1000.0, 100.0)
         );
-        assert!(x >= -2868.0 && x + 560.0 <= -12.0);
-        assert_eq!(y, 4.0);
-        assert!((20.0..=260.0).contains(&arrow));
+        assert_eq!(mini_size(MiniTimerStyle::Ring), (260.0, 260.0));
+    }
+
+    #[test]
+    fn menu_bar_ring_fills_with_elapsed_time_and_stops_when_paused() {
+        let now = 1_800_000_000_000;
+        let mut engine = Engine::new(now);
+        assert_eq!(menu_bar_progress(&engine.snapshot()), 0);
+        engine.dispatch(TimerAction::Start, now).unwrap();
+        engine.tick(now + 375_000);
+        assert_eq!(menu_bar_progress(&engine.snapshot()), 90);
+        engine.dispatch(TimerAction::Pause, now + 375_000).unwrap();
+        engine.tick(now + 390_000);
+        assert_eq!(menu_bar_progress(&engine.snapshot()), 90);
+        engine.dispatch(TimerAction::Resume, now + 400_000).unwrap();
+        engine.tick(now + 1_900_000);
+        assert_eq!(menu_bar_progress(&engine.snapshot()), 360);
+        assert_eq!(engine.snapshot().history.len(), 1);
+    }
+
+    #[test]
+    fn menu_bar_ring_has_a_visible_empty_track_and_distinct_progress() {
+        let full = menu_bar_icon_pixels(360);
+        let half = menu_bar_icon_pixels(180);
+        let empty = menu_bar_icon_pixels(0);
+        let orange_count = |pixels: &[u8]| {
+            pixels
+                .chunks_exact(4)
+                .filter(|pixel| pixel[0] > 200 && pixel[3] > 220)
+                .count()
+        };
+        assert_eq!(full.len(), 32 * 32 * 4);
+        assert_eq!(orange_count(&empty), 0);
+        assert!(orange_count(&full) > 100);
+        assert!((orange_count(&half) as f64 / orange_count(&full) as f64 - 0.5).abs() < 0.15);
+        assert!(empty.chunks_exact(4).any(|pixel| pixel[3] > 150));
+        assert_eq!(&empty[..4], &[0, 0, 0, 0]);
     }
 
     #[test]

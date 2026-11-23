@@ -357,6 +357,27 @@ async fn request_exact_alarm_permission(app: AppHandle) -> Result<Value, String>
     call(&app, "requestExactAlarmPermission", json!({}))
 }
 #[tauri::command]
+async fn get_notification_status(app: AppHandle, sound: bool) -> Result<Value, String> {
+    call(&app, "getNotificationStatus", json!({ "sound": sound }))
+}
+#[tauri::command]
+async fn request_notification_permission(app: AppHandle, sound: bool) -> Result<Value, String> {
+    call(
+        &app,
+        "requestNotificationPermission",
+        json!({ "sound": sound }),
+    )
+}
+#[tauri::command]
+async fn open_notification_settings(app: AppHandle, sound: bool) -> Result<(), String> {
+    call(&app, "openNotificationSettings", json!({ "sound": sound }))?;
+    Ok(())
+}
+#[tauri::command]
+async fn test_notification(app: AppHandle, sound: bool) -> Result<Value, String> {
+    call(&app, "testNotification", json!({ "sound": sound }))
+}
+#[tauri::command]
 async fn show_main_window(app: AppHandle) -> Result<(), String> {
     call(&app, "openApp", json!({}))?;
     Ok(())
@@ -387,6 +408,10 @@ pub fn run() {
             request_home_screen_widget,
             get_android_timer_status,
             request_exact_alarm_permission,
+            get_notification_status,
+            request_notification_permission,
+            open_notification_settings,
+            test_notification,
             show_main_window,
             hide_tray_popover,
             set_mini_timer_visible,

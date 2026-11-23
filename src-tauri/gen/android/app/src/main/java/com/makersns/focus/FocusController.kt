@@ -25,7 +25,6 @@ object FocusController {
     private var widgetKey: String? = null
     private var notificationKey: String? = null
     const val RUNNING_CHANNEL = "focus_running"
-    const val COMPLETION_CHANNEL = "focus_completion"
     const val RUNNING_NOTIFICATION = 4101
 
     fun exactAlarmsAllowed(context: Context): Boolean =
@@ -86,6 +85,9 @@ object FocusController {
     private fun consume(context: Context, response: JSONObject, userInitiated: Boolean) {
         latest = response
         val snapshot = response.getJSONObject("snapshot")
+        // Rust has already completed and persisted this round. An unrelated widget or
+        // foreground-service refresh failure must not swallow its once-only reminder.
+        response.optJSONObject("completed")?.let { FocusNotifications.completion(context, snapshot, it) }
         val timer = snapshot.getJSONObject("timer")
         val running = timer.getString("status") == "running"
         val resolvedLocale = localized(context, snapshot).resources.configuration.locales.toLanguageTags()
@@ -94,8 +96,9 @@ object FocusController {
         val key = listOf(timer.optString("runId"), timer.getString("status"),
             timer.getString("mode"), timer.getLong("durationMs"), response.optLong("deadlineElapsedMs"),
             timer.getString("intent"), snapshot.getJSONObject("preferences").getString("language"),
-            snapshot.getJSONObject("preferences").getString("theme"), resolvedLocale, resolvedTheme,
-            (timer.getLong("durationMs") - timer.getLong("remainingMs")) / 30_000).joinToString("|")
+            snapshot.getJSONObject("preferences").getString("theme"),
+            snapshot.getJSONObject("preferences").optString("miniTimerStyle", "ring"), resolvedLocale, resolvedTheme,
+            (timer.getLong("durationMs") - timer.getLong("remainingMs")) / 60_000).joinToString("|")
         if (key != widgetKey) {
             widgetKey = key
             FocusWidgetProvider.renderAll(context, response)
@@ -125,10 +128,6 @@ object FocusController {
             notificationKey = null
             context.stopService(Intent(context, FocusTimerService::class.java))
             context.getSystemService(NotificationManager::class.java).cancel(RUNNING_NOTIFICATION)
-        }
-        val completed = response.optJSONObject("completed")
-        if (completed != null && snapshot.getJSONObject("preferences").optBoolean("notificationsEnabled")) {
-            completionNotification(context, snapshot, completed)
         }
     }
 
@@ -180,8 +179,7 @@ object FocusController {
                 context.getString(R.string.focus_running_channel), NotificationManager.IMPORTANCE_LOW).apply {
                 setSound(null, null); enableVibration(false); setShowBadge(false)
             })
-            manager.createNotificationChannel(NotificationChannel(COMPLETION_CHANNEL,
-                context.getString(R.string.focus_completion_channel), NotificationManager.IMPORTANCE_DEFAULT))
+            FocusNotifications.createChannels(context)
         }
     }
 
@@ -210,20 +208,12 @@ object FocusController {
         return builder.build()
     }
 
-    private fun completionNotification(context: Context, snapshot: JSONObject, record: JSONObject) {
-        val manager = context.getSystemService(NotificationManager::class.java)
-        if (!manager.areNotificationsEnabled()) return
-        val local = localized(context, snapshot)
-        createChannels(local)
-        val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(context, COMPLETION_CHANNEL)
-            else Notification.Builder(context)
-        val message = if (record.getString("mode") == "focus") R.string.focus_completed_message else R.string.focus_break_completed
-        try {
-            manager.notify(record.getString("id").hashCode(), builder
-                .setSmallIcon(R.drawable.focus_notification_icon).setContentTitle("Focus")
-                .setContentText(local.getString(message)).setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(context, 4100, openAppIntent(context),
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)).build())
-        } catch (_: SecurityException) { }
+    fun testNotification(context: Context, sound: Boolean, callback: (Result<Boolean>) -> Unit) {
+        val app = context.applicationContext
+        executor.execute {
+            // No JNI/tick/preferences operation: testing must not advance or reset a round.
+            val result = runCatching { FocusNotifications.test(app, sound) }
+            try { callback(result) } catch (_: Exception) { }
+        }
     }
 }

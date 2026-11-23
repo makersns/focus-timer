@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="focus_completion_channel_description">专注或休息结束时提醒。声音遵循系统设置。</string>
+    <string name="focus_silent_channel">计时完成 · 静音</string>
+    <string name="focus_silent_channel_description">以静音通知提醒计时完成，不播放声音或振动。</string>
+    <string name="focus_completed_title">这一段专注完成了</string>
+    <string name="focus_break_completed_title">休息结束了</string>
+    <string name="focus_test_notification_title">Focus · 测试提醒</string>
+    <string name="focus_test_notification_message">计时结束时，Focus 会用这样的通知提醒你。</string>
+</resources>

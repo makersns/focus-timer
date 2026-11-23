@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Original geometry from public/widgets; clocks and actions remain native views. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="320dp" android:height="92dp" android:viewportWidth="320" android:viewportHeight="92">
+    <path android:strokeColor="#535145" android:strokeWidth="0.8" android:pathData="M46,1 H274 A45,45 0,0 1,319,46 A45,45 0,0 1,274,91 H46 A45,45 0,0 1,1,46 A45,45 0,0 1,46,1 Z">
+        <aapt:attr name="android:fillColor"><gradient android:startX="33" android:startY="1" android:endX="255" android:endY="91" android:type="linear"><item android:offset="0" android:color="#46443A"/><item android:offset="1" android:color="#302F28"/></gradient></aapt:attr>
+    </path>
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#686255" android:strokeWidth="3.8" android:pathData="M47,18 A28,28 0,1 1,47,74 A28,28 0,1 1,47,18 Z"/>
+</vector>

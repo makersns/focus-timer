@@ -174,6 +174,22 @@ fieldset { min-width: 0; }
 .setting-switch input:checked::before { transform: translateX(15px); background: #fffdf9; }
 .setting-switch input:disabled { opacity: .5; cursor: default; }
 .setting-unavailable { opacity: .65; cursor: default; }
+.notification-settings > .setting-switch { margin-top: 12px; }
+.notification-settings .notification-sound { margin-top: 18px; padding-left: 21px; }
+.notification-access { margin-top: 16px; padding: 11px 13px; border-radius: 12px; background: var(--surface-soft); color: var(--muted); }
+.notification-access > p:first-child { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; line-height: 1.65; }
+.notification-access > p:first-child > svg { margin-top: 2px; }
+.notification-allowed > p:first-child { color: var(--sage); }
+.notification-blocked > p:first-child { color: var(--accent-strong); }
+.notification-access-action { justify-content: flex-start; min-height: 36px; padding: 5px 0; margin-left: 21px; color: var(--ink); font-size: 11px; text-align: left; }
+.notification-access-action:hover:not(:disabled) { color: var(--accent-strong); background: transparent; }
+.notification-sound-note { color: var(--muted); font-size: 11px; line-height: 1.65; margin: 5px 0 0 21px; }
+.notification-test-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 13px; }
+.notification-test-row .button { flex-shrink: 0; min-height: 40px; padding: 0 12px; font-size: 11px; }
+.notification-test-row > p { flex: 1 1 180px; color: var(--muted); font-size: 10px; line-height: 1.65; }
+.notification-result { margin-top: 11px; font-size: 11px; line-height: 1.7; }
+.notification-result-info { color: var(--sage); }
+.notification-result .text-button { margin-left: 8px; padding: 0 4px; font-size: 11px; }
 .about-focus { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 9px 12px; align-items: center; padding-top: 0; }
 .about-focus h3 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
 .about-focus p { color: var(--muted); font-size: 11px; line-height: 1.7; }
@@ -281,6 +297,9 @@ html[data-surface="mini"] #root, html[data-surface="tray"] #root { width: 100%; 
 .tray-divider { height: 1px; background: var(--line); margin: 6px 12px; }
 .tray-preview { position: absolute; top: 12px; right: 14px; width: 105px; text-align: right; font-size: 9px; line-height: 1.4; color: var(--muted); }
 .tray-feedback { top: 61px; font-size: 11px; }
+/* AppKit owns the native popover frame and arrow; this surface is content only. */
+html[data-native-popover="true"] .tray-shell { margin: 0; width: 100%; height: 100%; border: 0; border-radius: 0; box-shadow: none; }
+html[data-native-popover="true"] .tray-shell::before { display: none; }
 
 @media (max-height: 780px) and (min-width: 580px) {
   :root { --dial-size: 300px; }

@@ -100,6 +100,19 @@ export function useFocusClient(api: FocusBackend, surface: "main" | "mini" | "tr
     return () => { cancelled = true; mounted.current = false; unsubscribe?.(); };
   }, [api, accept, attempt]);
 
+  useEffect(() => {
+    if (surface !== "main") return;
+    let cancelled = false;
+    let unsubscribe: (() => void) | undefined;
+    void api.subscribeNotificationErrors(() => {
+      if (!cancelled) setFeedback({ kind: "error", key: "notificationDeliveryFailed" });
+    }).then(stop => {
+      if (cancelled) stop();
+      else unsubscribe = stop;
+    }).catch(() => {});
+    return () => { cancelled = true; unsubscribe?.(); };
+  }, [api, surface]);
+
   const refreshAndroidStatus = useCallback(async () => {
     if (runtime?.platform !== "android") return;
     const status = await api.getAndroidTimerStatus();

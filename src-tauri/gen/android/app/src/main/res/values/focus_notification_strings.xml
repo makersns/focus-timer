@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="focus_completion_channel_description">Reminders when a focus session or break ends. Sound follows your system settings.</string>
+    <string name="focus_silent_channel">Session complete · silent</string>
+    <string name="focus_silent_channel_description">Quiet completion reminders without sound or vibration.</string>
+    <string name="focus_completed_title">Focus session complete</string>
+    <string name="focus_break_completed_title">Break complete</string>
+    <string name="focus_test_notification_title">Focus · Test reminder</string>
+    <string name="focus_test_notification_message">This is how Focus will remind you when a session ends.</string>
+</resources>

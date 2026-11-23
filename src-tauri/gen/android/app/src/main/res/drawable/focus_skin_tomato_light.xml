@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Original geometry from public/widgets; clocks and actions remain native views. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="240dp" android:height="260dp" android:viewportWidth="240" android:viewportHeight="260">
+    <group android:translateY="10" android:scaleX="0.9230769231" android:scaleY="0.9230769231">
+        <path android:pathData="M130,51 C159,34 203,40 228,67 C249,90 258,124 252,158 C246,211 201,249 130,250 C59,249 14,216 8,160 C2,126 13,88 34,66 C59,40 100,34 130,51 Z">
+            <aapt:attr name="android:fillColor"><gradient android:startX="42" android:startY="40" android:endX="218" android:endY="250" android:type="linear"><item android:offset="0" android:color="#EF9575"/><item android:offset="1" android:color="#DB7659"/></gradient></aapt:attr>
+        </path>
+        <path android:pathData="M129,62 C99,72 73,57 68,40 C91,31 116,37 129,62 Z">
+            <aapt:attr name="android:fillColor"><gradient android:startX="68" android:startY="34" android:endX="129" android:endY="65" android:type="linear"><item android:offset="0" android:color="#B5C18A"/><item android:offset="1" android:color="#93A965"/></gradient></aapt:attr>
+        </path>
+        <path android:fillColor="#A7B775" android:pathData="M131,62 C159,71 187,57 192,39 C168,30 145,39 131,62 Z"/>
+        <path android:fillColor="#93A965" android:pathData="M130,60 C112,43 115,19 130,7 C146,21 150,46 130,60 Z"/>
+    </group>
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#24FFE8D0" android:strokeWidth="4.3" android:strokeLineJoin="round" android:pathData="M120,67 C176,62 210,96 213,140 C219,195 181,233 120,233 C59,233 22,196 27,140 C29,97 64,64 120,67 Z"/>
+</vector>

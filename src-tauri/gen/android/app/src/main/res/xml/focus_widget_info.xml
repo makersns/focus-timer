@@ -2,6 +2,6 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
  android:minWidth="250dp" android:minHeight="132dp" android:minResizeWidth="220dp" android:minResizeHeight="132dp"
  android:targetCellWidth="4" android:targetCellHeight="2" android:updatePeriodMillis="0"
- android:initialLayout="@layout/focus_widget" android:previewLayout="@layout/focus_widget"
+ android:initialLayout="@layout/focus_skin_preview" android:previewLayout="@layout/focus_skin_preview"
  android:description="@string/focus_widget_description" android:resizeMode="horizontal|vertical"
  android:widgetCategory="home_screen" />

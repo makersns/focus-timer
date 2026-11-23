@@ -10,8 +10,8 @@
   "websiteUrl": "https://sugar.makersns.com/projects/focus",
   "gallery": [],
   "title": "Focus · 专注计时",
-  "summary": "留一点时间，只做好一件事。Sugar 的开源专注应用支持桌面悬浮计时、macOS 菜单栏动态时间与 Android 主屏幕小组件，以同一 Rust 计时源和本地记录陪你安排节奏。",
-  "description": "Focus 是 Sugar 制作的桌面与 Android 专注应用。暖色单列界面将标题栏融入页面，把模式、可选的小目标、大计时圆环和主要操作放在中心。专注、短休息、长休息默认 25 / 5 / 15 分钟，也可自定义 1–180 分钟；下一轮始终由你主动开始。\n\nmacOS、Windows 和 Linux 提供可拖动、可置顶的悬浮计时窗，macOS 菜单栏直接显示动态剩余时间，并提供快捷控制面板。桌面悬浮窗是应用窗口，macOS 版不是 Apple WidgetKit 系统小组件。Android 7+ arm64 则提供真正的主屏幕 AppWidget，可直接开始、暂停或继续。同一台设备上的界面、组件和菜单栏共享同一个 Rust 计时状态。\n\n桌面端主动退出会暂停并保存，意外终止后从最后检查点以暂停状态恢复。Android 在同次开机内被系统回收后，可核对保存的开机与经过时间信息并继续当前计时；设备重启或恢复信息无法核实时暂停。两种恢复方式分别适应桌面和手机的使用情境。\n\n完成轮次与提前结束的专注时间分开记录，休息不计入专注。数据留在本机，无需账号，没有广告或分析追踪。应用提供简体中文、繁體中文、English、日本語、한국어，以及浅色、深色和跟随系统外观；完成提醒按需开启。原创应用图标和 MIT 开源源码均由 Sugar 在 makersns/focus-timer 持续维护。",
+  "summary": "留一点时间，只做好一件事。Sugar 的开源专注应用提供圆环、番茄、胶囊三款组件、macOS 菜单栏动态计时与原生 Android 小组件，配合本地记录和可选的系统提醒。",
+  "description": "Focus 是 Sugar 制作的桌面与 Android 专注应用。融合标题栏、简洁的目标输入和圆环内的圆形操作，让主窗口保持安静。数字显示倒计时，闭合的平面圆环用逐渐增长的橙色表示已经投入的时间，没有额外的外圈阴影。专注、短休息、长休息默认 25 / 5 / 15 分钟，也可自定义 1–180 分钟；下一轮由你主动开始。\n\n圆环、番茄、胶囊提供三种不同的陪伴：圆环简洁平面，番茄带一点暖色趣味，胶囊以横向布局节省垂直空间。主窗口和设置中均可选择样式。macOS、Windows 和 Linux 使用可拖动、可置顶的应用悬浮窗；macOS 版不是 Apple WidgetKit 系统组件。macOS 菜单栏另有动态剩余时间与快捷控制面板。在 macOS 中，将小组件置顶后，也能在其他应用的全屏空间上方查看计时。 Android 7+ arm64 提供真正的主屏幕 AppWidget。所有界面读取同一台设备上的 Rust 计时状态。\n\n桌面端主动退出会暂停并保存，意外终止后从最后检查点以暂停状态恢复。Android 在同次开机内被系统回收后，可核对保存的开机与经过时间信息并继续当前计时；设备重启或恢复信息无法核实时暂停。两种恢复方式分别适应桌面和手机的使用情境。\n\n完成轮次与提前结束的专注时间分开记录，休息不计入专注。数据留在本机，无需账号，没有广告或分析追踪。原创应用图标和 MIT 开源源码均由 Sugar 在 makersns/focus-timer 持续维护。\n\n计时结束的系统通知默认关闭，开启时再申请权限。设置里能查看权限状态、获得系统设置指引并发送测试提醒；提示音是通知的可选项，由系统播放并遵循音量、静音与勿扰设置。简体中文、繁體中文、English、日本語、한국어和浅色、深色、跟随系统外观均可切换。",
   "tags": [
     "专注计时",
     "番茄钟",
@@ -29,17 +29,17 @@
     "Android 7+ · arm64"
   ],
   "highlights": [
-    "暖色单列主界面与融合标题栏：大计时圆环、可选目标和清楚的开始、暂停、继续操作。",
+    "融合标题栏、圆环内的主要操作与平面闭合圆环：数字倒计时，橙色进度随已投入时间增长。",
     "专注、短休息、长休息，默认 25 / 5 / 15 分钟；可自定义 1–180 分钟，不自动开始下一轮。",
-    "macOS、Windows、Linux 提供可拖动、可置顶的应用悬浮计时窗；macOS 版不是 WidgetKit 系统组件。",
+    "圆环、番茄、胶囊三款可切换的桌面悬浮计时窗，支持拖动、置顶与浅深外观；macOS 版不是 WidgetKit。 在 macOS 中，将小组件置顶后，也能在其他应用的全屏空间上方查看计时。",
     "macOS 菜单栏直接显示动态剩余时间，快捷面板可控制计时、显示组件或打开主窗口。",
-    "Android 7+ arm64 原生 AppWidget，可在主屏幕开始、暂停或继续；与应用共享同一 Rust 计时源。",
+    "Android 7+ arm64 原生 AppWidget，三种样式与原生倒计时，可在主屏幕开始、暂停、继续。",
     "桌面退出后暂停恢复；Android 同次开机内可恢复运行中计时，设备重启或信息无法核实时暂停。",
     "完成与提前结束分开记录；本机保留最近 500 条记录及最多 366 个日期的汇总，无需账号。",
-    "五种语言，浅色、深色与跟随系统；可选完成提醒、原创图标与 MIT 开源，作者 Sugar。"
+    "五种语言、本地数据、MIT 开源与原创图标；可选系统通知、真实权限状态、测试提醒及系统提示音。"
   ],
-  "seoTitle": "Focus 专注计时｜桌面悬浮、macOS 菜单栏与 Android 小组件",
-  "seoDescription": "Sugar 的开源专注应用，面向 macOS、Windows、Linux 与 Android 7+ arm64。暖色单列界面、融合标题栏、可置顶悬浮计时、macOS 菜单栏动态时间和原生 Android AppWidget。同一 Rust 计时源、本地真实记录、五种语言及浅深外观，MIT 开源。",
+  "seoTitle": "Focus 专注计时｜三款小组件、菜单栏计时与系统提醒",
+  "seoDescription": "Sugar 的开源专注应用，支持 macOS、Windows、Linux 与 Android。平面圆环、番茄、胶囊三款组件，macOS 菜单栏实时计时、原生 Android AppWidget、本地真实记录、五种语言和可选系统通知。",
   "content": {
     "type": "doc",
     "content": [
@@ -60,7 +60,7 @@
         "content": [
           {
             "type": "text",
-            "text": "写作、阅读，或手头的一项工作，先选一件想完成的事。Focus 用暖色单列界面把模式、可选的小目标、大计时圆环和主要操作排在一起。标题栏与页面保持同一表面，macOS 保留真实系统窗口按钮；统计与设置放在需要时再打开的入口中。"
+            "text": "写作、阅读，或手头的一项工作，先选一件想完成的事。Focus 把标题栏融入主窗口，将可选目标、平面闭合圆环和圆环内的主要操作排在中心。数字倒计时，橙色随已投入的时间增长；底部的四个圆点对应真实完成轮次。小组件样式和显示开关放在底部，统计与设置随时可打开。"
           }
         ]
       },
@@ -140,7 +140,7 @@
         "content": [
           {
             "type": "text",
-            "text": "macOS、Windows 和 Linux 的悬浮计时窗可拖动、可置顶，显示当前模式、剩余时间、意图和进度，并直接开始、暂停或继续。打开主窗口与隐藏小窗各有独立按钮；隐藏只改变窗口可见性，不会结束或暂停计时。它们是应用悬浮窗口，其中 macOS 版不是 Apple WidgetKit 系统小组件。"
+            "text": "圆环、番茄、胶囊共用同一个计时：圆环采用没有外圈阴影的平面样式，番茄以暖色与叶片增加一点轻松感，胶囊适合少占空间。可在主窗口或设置中选择，支持浅深外观。macOS、Windows 和 Linux 的组件是可拖动、可置顶的应用悬浮窗，macOS 版不是 Apple WidgetKit 系统组件。点击时间打开主窗口，暂停、继续、置顶和隐藏各有清楚操作；隐藏组件不会暂停计时。 在 macOS 中，将小组件置顶后，也能在其他应用的全屏空间上方查看计时。"
           }
         ]
       },
@@ -170,7 +170,7 @@
         "content": [
           {
             "type": "text",
-            "text": "Android 7+ arm64 使用真正的系统 AppWidget。把 Focus 添加到主屏幕，即可查看倒计时、当前目标和进度，并直接开始、暂停或继续；点击内容可回到应用。组件的位置、尺寸和移除由手机桌面管理，不套用桌面客户端的置顶或关闭按钮。"
+            "text": "Android 7+ arm64 使用真正的系统 AppWidget，并提供圆环、番茄、胶囊三种样式。添加到主屏幕后，可查看原生倒计时并直接开始、暂停或继续；点击内容回到应用。位置、尺寸与移除由手机桌面管理；小尺寸会收起次要文字，保留清楚的时间和操作按钮。"
           }
         ]
       },
@@ -272,7 +272,7 @@
         "content": [
           {
             "type": "text",
-            "text": "简体中文、繁體中文、English、日本語、한국어可随时切换，外观支持浅色、深色和跟随系统。计时与记录留在本机，无需账号，没有广告或分析追踪。完成提醒默认关闭，只在你选择开启时请求权限；下一轮由你决定，完成时也不会抢走其他应用的焦点。"
+            "text": "五种界面语言与浅色、深色、跟随系统外观可以随时切换。计时和记录留在本机，无需账号，没有广告或分析追踪。结束通知默认关闭；只有你选择开启或测试时才申请权限。提醒设置显示系统许可状态，提供设置指引和“测试提醒”。每次结束使用一条系统通知，可选择附带系统提示音；音量、静音和勿扰规则仍由系统控制。下一轮由你决定，结束时不会抢走其他应用的焦点。"
           }
         ]
       },
@@ -414,8 +414,8 @@
   "translations": {
     "zh-TW": {
       "title": "Focus · 專注計時",
-      "summary": "留一點時間，只做好一件事。Sugar 的開源專注應用提供桌面懸浮計時、macOS 選單列動態時間與 Android 主畫面小工具，共用 Rust 計時狀態，紀錄留在本機。",
-      "description": "Focus 是 Sugar 製作的桌面與 Android 專注應用。暖色單欄介面讓標題列融入頁面，將模式、可選的小目標、大計時圓環與主要操作放在中心。專注、短休息、長休息預設 25 / 5 / 15 分鐘，也可自訂 1–180 分鐘；下一輪始終由你主動開始。\n\nmacOS、Windows 與 Linux 提供可拖曳、可置頂的懸浮計時視窗；macOS 選單列直接顯示剩餘時間，並提供快捷控制面板。這些是應用程式的懸浮視窗，macOS 版不是 Apple WidgetKit 系統小工具。Android 7+ arm64 則提供真正的主畫面 AppWidget，可以直接開始、暫停或繼續。同一裝置上的介面、元件與選單列共用同一個 Rust 計時狀態。\n\n桌面端主動結束會暫停並儲存，意外終止後從最後檢查點以暫停狀態恢復。Android 在同次開機內遭系統回收後，可核對開機與經過時間資訊並繼續目前計時；裝置重新開機或恢復資訊無法核實時暫停。\n\n完整完成與提前結束的專注時間分開記錄，休息不計入專注。資料留在本機，不需帳號，沒有廣告或分析追蹤。提供簡體中文、繁體中文、English、日本語、한국어，以及淺色、深色與跟隨系統外觀；完成提醒可自行開啟。Sugar 的原創應用程式圖示及 MIT 開源程式碼都收錄於 makersns/focus-timer。",
+      "summary": "留一點時間，只做好一件事。Sugar 的開源專注應用提供圓環、番茄、膠囊三款元件、macOS 選單列計時與原生 Android 小工具，搭配本機紀錄與可選的系統提醒。",
+      "description": "Focus 是 Sugar 製作的桌面與 Android 專注應用。融合標題列、簡潔的目標輸入與圓環內的圓形操作，讓主畫面保持安靜。數字顯示倒數，閉合的平面圓環以逐漸增長的橙色表示已投入的時間，沒有額外的外圈陰影。專注、短休息、長休息預設 25 / 5 / 15 分鐘，也可自訂 1–180 分鐘；下一輪由你主動開始。\n\n圓環、番茄、膠囊提供三種不同的陪伴，主畫面與設定都能選擇。macOS、Windows 和 Linux 使用可拖曳、可置頂的應用程式懸浮視窗；macOS 版不是 Apple WidgetKit 系統元件。macOS 選單列另有動態剩餘時間與快捷控制面板。在 macOS 中，將小工具置頂後，也能在其他應用程式的全螢幕空間上方查看計時。 Android 7+ arm64 提供真正的主畫面 AppWidget。所有畫面讀取同一裝置上的 Rust 計時狀態。\n\n桌面端主動結束會暫停並儲存，意外終止後從最後檢查點以暫停狀態恢復。Android 在同次開機內遭系統回收後，可核對開機與經過時間資訊並繼續目前計時；裝置重新開機或恢復資訊無法核實時暫停。\n\n完整完成與提前結束的專注時間分開記錄，休息不計入專注。資料留在本機，不需帳號，沒有廣告或分析追蹤。Sugar 的原創應用程式圖示及 MIT 開源程式碼都收錄於 makersns/focus-timer。\n\n計時結束的系統通知預設關閉，開啟時再要求權限。設定中可查看權限狀態、取得系統設定指引並傳送測試提醒；提示音是通知的可選項，由系統播放並遵循音量、靜音與勿擾設定。簡體中文、繁體中文、English、日本語、한국어與淺色、深色、跟隨系統外觀都能切換。",
       "tags": [
         "專注計時",
         "番茄鐘",
@@ -433,17 +433,17 @@
         "Android 7+ · arm64"
       ],
       "highlights": [
-        "暖色單欄主畫面與融合標題列：大計時圓環、可選目標，以及清楚的開始、暫停、繼續操作。",
+        "融合標題列、圓環內的主要操作與平面閉合圓環：數字倒數，橙色進度隨已投入時間增長。",
         "專注、短休息、長休息，預設 25 / 5 / 15 分鐘；可自訂 1–180 分鐘，不自動開始下一輪。",
-        "macOS、Windows、Linux 提供可拖曳、可置頂的懸浮計時視窗；macOS 版不是 WidgetKit 系統小工具。",
+        "圓環、番茄、膠囊三款可切換的懸浮計時視窗，支援拖曳、置頂與淺深外觀；macOS 版不是 WidgetKit。 在 macOS 中，將小工具置頂後，也能在其他應用程式的全螢幕空間上方查看計時。",
         "macOS 選單列直接顯示剩餘時間，快捷面板可控制計時、顯示小工具或開啟主視窗。",
-        "Android 7+ arm64 原生 AppWidget，可在主畫面開始、暫停或繼續，與應用程式共用 Rust 計時源。",
+        "Android 7+ arm64 原生 AppWidget，三款樣式與原生倒數，可在主畫面開始、暫停、繼續。",
         "桌面結束後暫停恢復；Android 同次開機內可恢復執行中的計時，重新開機或資訊無法核實時暫停。",
         "完整完成與提前結束分開記錄；本機保留最近 500 筆紀錄及最多 366 個日期的彙總，不需帳號。",
-        "五種語言，淺色、深色與跟隨系統；選擇性完成提醒、原創圖示與 MIT 開源，作者 Sugar。"
+        "五種語言、本機資料、MIT 開源與原創圖示；可選系統通知、實際權限狀態、測試提醒與系統提示音。"
       ],
-      "seoTitle": "Focus 專注計時｜桌面懸浮、macOS 選單列與 Android 小工具",
-      "seoDescription": "Sugar 的開源專注應用，支援 macOS、Windows、Linux 與 Android 7+ arm64。暖色單欄介面、融合標題列、可置頂懸浮計時、macOS 選單列動態時間與原生 Android AppWidget。共用 Rust 計時源、本機真實紀錄、五種語言及淺深外觀，MIT 授權。",
+      "seoTitle": "Focus 專注計時｜三款小工具、選單列計時與系統提醒",
+      "seoDescription": "Sugar 的開源專注應用，支援 macOS、Windows、Linux 與 Android。平面圓環、番茄、膠囊三款元件，macOS 選單列即時計時、原生 Android AppWidget、本機真實紀錄、五種語言與可選系統通知。",
       "content": {
         "type": "doc",
         "content": [
@@ -464,7 +464,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "寫作、閱讀，或手邊的一項工作，先選一件想完成的事。Focus 的暖色單欄介面把模式、可選的小目標、大計時圓環與主要操作放在一起。標題列與頁面保持相同表面，macOS 保留真正的系統視窗按鈕；統計與設定需要時再開啟。"
+                "text": "寫作、閱讀，或手邊的一項工作，先選一件想完成的事。Focus 將標題列融入主畫面，把可選目標、平面閉合圓環與圓環內的主要操作排在中心。數字倒數，橙色隨已投入的時間增長；四個圓點對應真實完成輪次。元件樣式與顯示開關放在底部，統計與設定隨時可開啟。"
               }
             ]
           },
@@ -544,7 +544,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "macOS、Windows 與 Linux 的懸浮計時視窗可拖曳、可置頂，顯示模式、剩餘時間、目標與進度，並可直接開始、暫停或繼續。開啟主視窗與隱藏小視窗各有獨立按鈕；隱藏只改變可見狀態，不會停止或暫停計時。它們是應用程式的懸浮視窗，macOS 版不是 Apple WidgetKit 系統小工具。"
+                "text": "圓環、番茄、膠囊共用同一個計時：圓環採用沒有外圈陰影的平面樣式，番茄以暖色與葉片增加一點輕鬆感，膠囊適合少占空間。主畫面與設定均可切換，並支援淺深外觀。macOS、Windows 和 Linux 的元件是可拖曳、可置頂的應用程式懸浮視窗，macOS 版不是 Apple WidgetKit 系統元件。點擊時間開啟主視窗，暫停、繼續、置頂與隱藏都有清楚的操作；隱藏不會暫停計時。 在 macOS 中，將小工具置頂後，也能在其他應用程式的全螢幕空間上方查看計時。"
               }
             ]
           },
@@ -574,7 +574,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Android 7+ arm64 使用真正的系統 AppWidget。將 Focus 加入主畫面，即可查看倒數、目前目標與進度，直接開始、暫停或繼續；點選內容可返回應用程式。小工具的位置、尺寸與移除交由手機主畫面管理，不放入桌面版的置頂與關閉按鈕。"
+                "text": "Android 7+ arm64 使用真正的系統 AppWidget，提供圓環、番茄、膠囊三種樣式。在主畫面查看原生倒數，並直接開始、暫停或繼續；點擊內容回到應用程式。位置、尺寸與移除由手機桌面管理；小尺寸會收起次要文字，保留清楚的時間與操作按鈕。"
               }
             ]
           },
@@ -676,7 +676,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "簡體中文、繁體中文、English、日本語、한국어可隨時切換，外觀支援淺色、深色與跟隨系統。計時和紀錄留在本機，不需帳號，沒有廣告或分析追蹤。完成提醒預設關閉，僅在你開啟時要求權限；下一輪由你決定，結束時也不會搶走其他應用程式的焦點。"
+                "text": "五種介面語言與淺色、深色、跟隨系統外觀可以隨時切換。計時與紀錄留在本機，不需帳號，沒有廣告或分析追蹤。結束通知預設關閉；只有你選擇開啟或測試時才要求權限。提醒設定顯示系統許可狀態，提供設定指引與測試提醒。每次結束使用一則系統通知，可選擇附帶系統提示音；音量、靜音與勿擾規則仍由系統控制。下一輪由你決定，結束時不會搶走其他應用程式的焦點。"
               }
             ]
           },
@@ -818,8 +818,8 @@
     },
     "en": {
       "title": "Focus by Sugar",
-      "summary": "An open-source focus timer for desktop and Android, with a floating mini timer, live macOS menu-bar time, and a native Android home-screen widget.",
-      "description": "Focus is an independent desktop and Android focus timer by Sugar. A warm, centered single-column layout blends the title bar into the page and brings together the mode, an optional intention, a large progress ring, and one clear action. Focus, short breaks, and long breaks default to 25 / 5 / 15 minutes, with custom rounds from 1 to 180 minutes. You decide when the next round begins.\n\nmacOS, Windows, and Linux offer draggable, pinnable mini timers. macOS also shows live remaining time directly in the menu bar, with a compact control panel. Desktop mini timers are floating application windows; the macOS version is not an Apple WidgetKit system widget. Android 7+ arm64 provides a native home-screen AppWidget with start, pause, and resume controls. On each device, the interface and available widgets share one authoritative Rust timer.\n\nQuitting on desktop pauses and saves; unexpected desktop stops restore the last checkpoint as paused. Android can recover an active round after process reclamation during the same device boot when its saved boot and elapsed-time information can be verified. A device reboot or unverifiable recovery restores a paused round.\n\nCompleted sessions and early-ended focus time are recorded separately, and breaks never add focus minutes. Records stay locally, with no account, ads, or analytics. Five interface languages, light/dark/system appearance, optional completion alerts, and an original app icon make Focus your own. Its source is maintained at makersns/focus-timer under the MIT license.",
+      "summary": "A calm, open-source focus timer with Ring, Tomato and Capsule widgets, live macOS menu-bar time, native Android widgets, and optional system reminders.",
+      "description": "Focus is an independent desktop and Android timer by Sugar. Its integrated title bar, optional intention field and round action inside the dial keep the main window calm. The digits count down while a flat, continuous ring fills with elapsed time; there is no outer ring shadow. Focus, short breaks and long breaks default to 25 / 5 / 15 minutes, with custom rounds from 1 to 180 minutes. You choose when the next round starts.\n\nChoose Ring, Tomato or Capsule in the main window or Settings. Ring stays flat and simple, Tomato adds a little warmth, and Capsule takes less space. macOS, Windows and Linux use draggable, pinnable floating app windows; the macOS version is not an Apple WidgetKit system widget. macOS also has live remaining time and a compact panel in the menu bar. On macOS, pin the mini timer to keep it visible above another app in a full-screen Space. Android 7+ arm64 uses a real home-screen AppWidget. Every surface on a device reads the same Rust timer.\n\nQuitting on desktop pauses and saves; unexpected desktop stops restore the last checkpoint as paused. Android can recover an active round after process reclamation during the same device boot when its saved boot and elapsed-time information can be verified. A device reboot or unverifiable recovery restores a paused round.\n\nCompleted sessions and early-ended focus time are recorded separately; breaks never add focus minutes. Records stay locally, with no account, ads or analytics. Sugar's original app icon and MIT-licensed source are maintained at makersns/focus-timer.\n\nCompletion notifications start off. Enable them when useful, inspect the actual permission state, follow system-settings guidance and try a test reminder. Sound is an optional part of the system notification, respecting system volume, mute and Do Not Disturb. Five interface languages and light, dark or system appearance are available.",
       "tags": [
         "Focus timer",
         "Pomodoro",
@@ -837,17 +837,17 @@
         "Android 7+ · arm64"
       ],
       "highlights": [
-        "A warm single-column screen with an integrated title bar, a large progress ring, an optional intention, and one clear action.",
+        "An integrated title bar and round control inside a flat, continuous dial: digits count down while orange progress grows with time spent.",
         "Focus, short breaks, and long breaks; 25 / 5 / 15-minute defaults, 1–180-minute custom rounds, and no automatic next round.",
-        "Draggable, pinnable mini timers for macOS, Windows, and Linux: app windows, not Apple WidgetKit system widgets.",
+        "Ring, Tomato and Capsule floating timers: light/dark looks, dragging and pinning. Pinned macOS minis stay visible over other apps in full-screen Spaces.",
         "Live remaining time in the macOS menu bar, with a panel to control timing, show the mini timer, or open the main window.",
-        "A native AppWidget for Android 7+ arm64: start, pause, or resume from the home screen using the same Rust timer as the app.",
+        "A real Android 7+ arm64 AppWidget with three styles and a native countdown; start, pause and resume from your home screen.",
         "Desktop quit restores paused. Android can resume after same-boot process reclamation; device reboot or unverifiable recovery restores paused.",
         "Honest local records distinguish completion from early endings; keep 500 recent sessions and totals for up to 366 dates.",
-        "Five languages; light, dark, or system appearance. Optional completion alerts, an original icon by Sugar, and MIT-licensed source."
+        "Five languages, local records, original artwork and MIT source. Optional system notifications, actual permission status, test reminders and system sound."
       ],
-      "seoTitle": "Focus by Sugar | Desktop Mini Timer & Android Home-Screen Widget",
-      "seoDescription": "Focus by Sugar for macOS, Windows, Linux, and Android 7+ arm64. A calm single-column timer, floating desktop mini timers, live macOS menu-bar controls, and a native Android AppWidget. One local Rust timer, honest records, five languages, light/dark themes. MIT open source.",
+      "seoTitle": "Focus by Sugar | Three Widget Styles & Calm Focus Timer",
+      "seoDescription": "An open-source timer for macOS, Windows, Linux and Android. Ring, Tomato and Capsule widgets, live menu-bar time, local records, five languages and optional system reminders.",
       "content": {
         "type": "doc",
         "content": [
@@ -868,7 +868,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "A piece of writing, a chapter to read, or the next small task: choose one thing, add an intention if it helps, and begin. Focus centers the mode, intention, progress ring, and main action in one warm column. The title bar shares the same surface, macOS keeps its real window controls, and statistics and settings are there when you need them."
+                "text": "Choose a chapter, a piece of writing or one small task. Focus brings the title bar into the main surface and puts the optional intention, flat continuous ring and round primary control together. Digits count down while the orange arc grows with time spent. Four cycle dots reflect completed sessions. Widget styles and visibility sit in a small shelf below; statistics and settings stay close at hand."
               }
             ]
           },
@@ -948,7 +948,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "On macOS, Windows, and Linux, a draggable mini timer can stay above other windows. It shows the mode, remaining time, intention, and progress, with direct start, pause, and resume controls. Open the main window or hide the mini timer separately: hiding never pauses or ends the round. These are floating application windows; the macOS mini timer is not an Apple WidgetKit system widget."
+                "text": "Ring, Tomato and Capsule are three views of the same timer. Ring is flat and shadow-free, Tomato adds warm color and a leaf crown, and Capsule keeps a small footprint. Select a style in the main window or Settings, with matching light and dark appearances. On macOS, Windows and Linux these are draggable, pinnable floating app windows; the macOS version is not an Apple WidgetKit system widget. Click the time to open the main window, or use the dedicated pause, resume, pin and hide controls. Hiding leaves the round running. On macOS, pin the mini timer to keep it visible above another app in a full-screen Space."
               }
             ]
           },
@@ -978,7 +978,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Android 7+ arm64 uses a real system AppWidget. Add Focus to your home screen to see the countdown, intention, and progress, then start, pause, or resume directly. Tap its content to open the app. Your launcher manages placement, resizing, and removal, so the widget does not borrow desktop pin and close buttons."
+                "text": "Android 7+ arm64 uses a real system AppWidget, with Ring, Tomato and Capsule styles. See a native countdown and start, pause or resume from the home screen; tap the content to open the app. Your launcher manages placement, size and removal. Smaller sizes simplify secondary text while preserving readable time and usable controls."
               }
             ]
           },
@@ -1080,7 +1080,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Choose Simplified Chinese, Traditional Chinese, English, Japanese, or Korean, with light, dark, or system appearance. Timing and records stay locally, without an account, ads, or analytics. Completion alerts are off by default, with permission requested when you enable them. You choose the next round, and completion never steals another app's focus."
+                "text": "Switch among five interface languages and light, dark or system appearance. Your timer and records stay on the device, without an account, ads or analytics. Completion notifications start off; permission is requested only when you enable or explicitly test them. Settings shows the system permission state, provides guidance and offers a test reminder. Each completion uses one system notification with an optional system sound; volume, mute and Do Not Disturb remain under system control. You choose the next round, and completion does not take focus from another app."
               }
             ]
           },
@@ -1222,8 +1222,8 @@
     },
     "ja": {
       "title": "Focus · 集中タイマー",
-      "summary": "ひとつのことに、少しの時間を。Sugar のオープンソース集中タイマー。デスクトップのミニタイマー、macOS メニューバーの残り時間、Android のホーム画面ウィジェットで、同じ計時を手元に。",
-      "description": "Focus は Sugar が制作する、デスクトップと Android 向けの集中タイマーです。暖かな色の1カラム画面にタイトルバーをなじませ、モード、任意の目標、大きな進捗リング、次の操作を中央にまとめています。集中・短い休憩・長い休憩の標準は 25 / 5 / 15 分。1〜180 分に変更でき、次の開始はいつも自分で選べます。\n\nmacOS・Windows・Linux では、移動と最前面表示に対応するミニタイマーを使えます。macOS のメニューバーには残り時間が直接表示され、操作パネルも開けます。ミニタイマーはアプリのフローティングウィンドウで、macOS 版は Apple WidgetKit のシステムウィジェットではありません。Android 7+ arm64 はネイティブのホーム画面 AppWidget に対応し、開始・一時停止・再開を直接操作できます。同一端末の画面とウィジェットはひとつの Rust タイマーを共有します。\n\nデスクトップの終了時は一時停止して保存し、予期しない終了後は最後のチェックポイントから一時停止で復元します。Android では端末を再起動していなければ、起動情報と経過時間を確認して、回収されたプロセスの実行中タイマーを復元できます。端末の再起動後や情報を確認できない場合は一時停止します。\n\n完了したセッションと途中終了した集中時間は別々に記録し、休憩を集中時間に加えません。記録は端末内に保存され、アカウント、広告、アクセス解析はありません。5言語、ライト・ダーク・システム設定、任意の完了通知、オリジナルのアプリアイコンを備え、makersns/focus-timer で MIT ライセンスのソースを公開しています。",
+      "summary": "Sugar のオープンソース集中タイマー。リング・トマト・カプセルの3スタイル、macOS メニューバー、Android のネイティブウィジェットと任意のシステム通知を備えています。",
+      "description": "Focus は Sugar が制作するデスクトップと Android 向けの集中タイマーです。画面になじむタイトルバー、任意の目標入力、リング内の丸い操作ボタンで、落ち着いた主画面にまとめました。数字は残り時間を示し、影のない閉じたリングは経過時間に合わせてオレンジ色で満ちていきます。集中・短い休憩・長い休憩は標準 25 / 5 / 15 分、1〜180 分に変更できます。次の開始は自分で選びます。\n\nリング・トマト・カプセルは主画面と設定で選べます。リングはフラットに、トマトは少し温かく、カプセルは省スペースに。macOS・Windows・Linux では移動と最前面表示に対応するアプリの小窓を使い、macOS 版は Apple WidgetKit のシステムウィジェットではありません。macOS メニューバーには残り時間と操作パネル、macOS ではミニタイマーを最前面に固定すると、別のアプリのフルスクリーンスペースでも表示できます。 Android 7+ arm64 には実際のホーム画面 AppWidget を用意しています。同じ端末の各画面はひとつの Rust タイマーを共有します。\n\nデスクトップの終了時は一時停止して保存し、予期しない終了後は最後のチェックポイントから一時停止で復元します。Android では端末を再起動していなければ、起動情報と経過時間を確認して、回収されたプロセスの実行中タイマーを復元できます。端末の再起動後や情報を確認できない場合は一時停止します。\n\n完了したセッションと途中終了した集中時間は別々に記録し、休憩を集中時間に加えません。記録は端末内に保存され、アカウント、広告、アクセス解析はありません。Sugar のオリジナルアイコンと MIT ライセンスのソースを makersns/focus-timer で公開しています。\n\n完了通知は初期設定でオフです。必要なときに許可し、設定で実際の許可状態、システム設定への案内、テスト通知を確認できます。通知音はシステム通知の任意項目で、音量・ミュート・通知を制限するモードに従います。5言語とライト・ダーク・システム設定に対応します。",
       "tags": [
         "集中タイマー",
         "ポモドーロ",
@@ -1241,17 +1241,17 @@
         "Android 7+ · arm64"
       ],
       "highlights": [
-        "タイトルバーがなじむ暖かな1カラム画面。大きな進捗リング、任意の目標、わかりやすい主要操作。",
+        "画面になじむタイトルバーとリング内の丸い操作。影のない閉じたリングが経過時間を示し、数字はカウントダウン。",
         "集中・短い休憩・長い休憩。標準 25 / 5 / 15 分、1〜180 分に変更でき、次の回は自動開始しません。",
-        "macOS・Windows・Linux の移動・最前面表示に対応するミニタイマー。macOS 版は WidgetKit ではなくアプリの小窓です。",
+        "リング・トマト・カプセルの3スタイル。移動・最前面表示とライト・ダークに対応。macOS は WidgetKit ではなくアプリの小窓です。 macOS ではミニタイマーを最前面に固定すると、別のアプリのフルスクリーンスペースでも表示できます。",
         "macOS メニューバーに残り時間を表示。パネルから計時、ミニタイマー、メイン画面を操作できます。",
-        "Android 7+ arm64 のネイティブ AppWidget。アプリと同じ Rust タイマーで、ホーム画面から開始・一時停止・再開。",
+        "Android 7+ arm64 の実際の AppWidget。3スタイルとネイティブの残り時間で、開始・一時停止・再開を操作。",
         "デスクトップ終了後は一時停止で復元。Android は同じ起動中のプロセス回収から復元でき、再起動後や情報未確認時は一時停止。",
         "完了と途中終了を分けて端末内に保存。直近 500 件の記録と、最大 366 日付分の日別合計に対応。",
-        "5言語、ライト・ダーク・システム設定、任意の完了通知。Sugar のオリジナルアイコンと MIT オープンソース。"
+        "5言語、端末内の記録、オリジナルの図形と MIT ソース。実際の通知許可状態、テスト通知、任意のシステム通知音。"
       ],
-      "seoTitle": "Focus by Sugar｜ミニタイマー・macOS メニューバー・Android ウィジェット",
-      "seoDescription": "macOS・Windows・Linux・Android 7+ arm64 向けのオープンソース集中タイマー。暖かな1カラム画面、デスクトップの小窓、macOS メニューバーの残り時間、ネイティブ Android AppWidget。同一端末の Rust タイマー、ローカル記録、5言語とライト・ダークテーマ。作者 Sugar、MIT ライセンス。",
+      "seoTitle": "Focus by Sugar｜3つのウィジェットと穏やかな集中タイマー",
+      "seoDescription": "macOS・Windows・Linux・Android 向けのオープンソース集中タイマー。リング・トマト・カプセル、メニューバーの残り時間、Android AppWidget、ローカル記録、5言語、任意のシステム通知。作者 Sugar。",
       "content": {
         "type": "doc",
         "content": [
@@ -1272,7 +1272,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "文章を書く、本を読む、目の前の仕事をひとつ進める。取り組みたいことを決め、必要なら目標を書いて始めます。Focus はモード、目標、大きな進捗リング、主要操作を暖かな1カラムにまとめています。タイトルバーは画面になじみ、macOS のシステムウィンドウボタンはそのまま。統計と設定は必要なときに開けます。"
+                "text": "読む章、書きたい文章、目の前の小さな仕事をひとつ選びます。Focus はタイトルバーを主画面になじませ、目標入力、フラットで閉じたリング、丸い主要操作を中央に配置しました。数字はカウントダウンし、オレンジの弧は取り組んだ時間に合わせて増えます。4つの点は完了した回数を示します。下部の小さな棚でウィジェットのスタイルと表示を選び、統計や設定もすぐに開けます。"
               }
             ]
           },
@@ -1352,7 +1352,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "macOS・Windows・Linux のミニタイマーは移動と最前面表示に対応し、モード、残り時間、目標、進捗を表示します。開始・一時停止・再開もその場で操作できます。主画面を開く操作とミニタイマーを隠す操作は独立し、隠しても計時は止まりません。これはアプリのフローティングウィンドウであり、macOS 版は Apple WidgetKit のシステムウィジェットではありません。"
+                "text": "リング・トマト・カプセルは同じタイマーを表示する3つのスタイルです。リングは影のないフラットな形、トマトは温かい色と小さな葉、カプセルは省スペース。主画面や設定で選び、ライト・ダークもそろえられます。macOS・Windows・Linux では移動と最前面表示に対応するアプリの小窓で、macOS 版は Apple WidgetKit のシステムウィジェットではありません。時間を押すと主画面が開き、一時停止・再開・固定・非表示も操作できます。隠しても計時は続きます。 macOS ではミニタイマーを最前面に固定すると、別のアプリのフルスクリーンスペースでも表示できます。"
               }
             ]
           },
@@ -1382,7 +1382,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Android 7+ arm64 では実際のシステム AppWidget を使用します。ホーム画面に Focus を追加し、残り時間、目標、進捗を確認しながら開始・一時停止・再開できます。内容をタップするとアプリが開きます。移動、サイズ変更、削除はランチャーが管理するため、デスクトップ用の最前面固定や閉じるボタンは置きません。"
+                "text": "Android 7+ arm64 は実際のシステム AppWidget を使用し、リング・トマト・カプセルを選べます。ホーム画面でネイティブの残り時間を確認し、そのまま開始・一時停止・再開できます。内容をタップするとアプリが開きます。配置、サイズ、削除はランチャーが管理し、小さいサイズでは補助の文字を減らして時間と操作を見やすく保ちます。"
               }
             ]
           },
@@ -1484,7 +1484,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "簡体字中国語・繁体字中国語・英語・日本語・韓国語を切り替え、ライト・ダーク・システム設定を選べます。計時と記録は端末内に保存し、アカウント、広告、アクセス解析はありません。完了通知は初期設定でオフで、有効にするときに許可を求めます。次の開始は自分で選び、完了時にほかのアプリのフォーカスを奪うこともありません。"
+                "text": "5言語とライト・ダーク・システム設定を切り替えられます。計時と記録は端末内に保存し、アカウント、広告、アクセス解析はありません。完了通知は初期設定でオフで、有効にするか明示的にテストするときだけ許可を求めます。設定には実際の許可状態、システム設定への案内、テスト通知があります。完了時は1件のシステム通知を使用し、必要ならシステム通知音を添えます。音量、ミュート、通知を制限するモードはシステム設定に従います。次の開始は自分で選び、ほかのアプリのフォーカスを奪いません。"
               }
             ]
           },
@@ -1626,8 +1626,8 @@
     },
     "ko": {
       "title": "Focus · 집중 타이머",
-      "summary": "Sugar의 오픈 소스 집중 타이머. 데스크톱 미니 타이머, macOS 메뉴 막대의 남은 시간, Android 홈 화면 위젯을 같은 Rust 타이머로 연결하고 기록은 기기에 보관합니다.",
-      "description": "Focus는 Sugar가 만드는 데스크톱과 Android용 집중 타이머입니다. 제목 표시줄이 자연스럽게 이어지는 따뜻한 한 열 화면에 모드, 선택 목표, 큰 진행 링과 주요 동작을 배치했습니다. 집중·짧은 휴식·긴 휴식은 기본 25 / 5 / 15분이며 1–180분으로 바꿀 수 있습니다. 다음 세션의 시작은 직접 선택합니다.\n\nmacOS, Windows, Linux에서 이동 및 항상 위에 표시를 지원하는 미니 타이머를 제공합니다. macOS 메뉴 막대에는 남은 시간이 바로 표시되고 작은 제어 패널을 열 수 있습니다. 데스크톱 미니 타이머는 앱의 플로팅 창이며 macOS 버전은 Apple WidgetKit 시스템 위젯이 아닙니다. Android 7+ arm64는 실제 홈 화면 AppWidget으로 시작·일시 정지·계속하기를 지원합니다. 같은 기기의 화면과 위젯은 하나의 Rust 타이머 상태를 공유합니다.\n\n데스크톱 앱을 종료하면 일시 정지하고 저장하며, 예기치 않은 종료 후에는 마지막 체크포인트를 일시 정지 상태로 복원합니다. Android는 같은 부팅 중 프로세스가 회수되어도 저장된 부팅 및 경과 시간 정보를 확인해 실행 중인 타이머를 복원할 수 있습니다. 기기를 재부팅하거나 복원 정보를 확인할 수 없으면 일시 정지 상태가 됩니다.\n\n완료 세션과 일찍 끝낸 집중 시간을 따로 기록하며 휴식은 집중 시간에 더하지 않습니다. 기록은 기기에 보관하고 계정, 광고, 분석 추적이 없습니다. 5개 언어, 밝게·어둡게·시스템 테마, 선택 가능한 완료 알림과 독창적인 앱 아이콘을 제공하며 makersns/focus-timer에서 MIT 라이선스로 소스를 공개합니다.",
+      "summary": "Sugar의 오픈 소스 집중 타이머. 링·토마토·캡슐 스타일, macOS 메뉴 막대, 실제 Android 위젯과 선택 가능한 시스템 알림으로 같은 타이머를 편하게 확인하세요.",
+      "description": "Focus는 Sugar가 만드는 데스크톱과 Android용 집중 타이머입니다. 자연스럽게 이어지는 제목 표시줄, 선택 목표 입력과 링 안의 둥근 버튼으로 메인 화면을 차분하게 정리했습니다. 숫자는 남은 시간을 표시하고, 그림자 없는 닫힌 링은 집중한 시간에 따라 주황색으로 채워집니다. 집중·짧은 휴식·긴 휴식은 기본 25 / 5 / 15분이며 1–180분으로 바꿀 수 있습니다. 다음 시작은 직접 선택합니다.\n\n메인 화면과 설정에서 링·토마토·캡슐을 선택하세요. 링은 평면으로 간결하게, 토마토는 따뜻하게, 캡슐은 작은 공간에 어울립니다. macOS·Windows·Linux는 이동과 항상 위에 표시를 지원하는 앱의 플로팅 창이며 macOS 버전은 Apple WidgetKit 시스템 위젯이 아닙니다. macOS 메뉴 막대에는 남은 시간과 제어 패널이 있고, macOS에서 미니 타이머를 항상 위에 표시하도록 고정하면 다른 앱의 전체 화면 공간 위에서도 시간을 확인할 수 있습니다. Android 7+ arm64에서는 실제 홈 화면 AppWidget을 사용합니다. 같은 기기의 화면은 하나의 Rust 타이머를 공유합니다.\n\n데스크톱 앱을 종료하면 일시 정지하고 저장하며, 예기치 않은 종료 후에는 마지막 체크포인트를 일시 정지 상태로 복원합니다. Android는 같은 부팅 중 프로세스가 회수되어도 저장된 부팅 및 경과 시간 정보를 확인해 실행 중인 타이머를 복원할 수 있습니다. 기기를 재부팅하거나 복원 정보를 확인할 수 없으면 일시 정지 상태가 됩니다.\n\n완료 세션과 일찍 끝낸 집중 시간을 따로 기록하며 휴식은 집중 시간에 더하지 않습니다. 기록은 기기에 보관하고 계정, 광고, 분석 추적이 없습니다. Sugar의 독창적인 앱 아이콘과 MIT 라이선스 소스를 makersns/focus-timer에서 공개합니다.\n\n완료 알림은 기본으로 꺼져 있습니다. 필요할 때 허용하고, 설정에서 실제 권한 상태, 시스템 설정 안내와 테스트 알림을 확인할 수 있습니다. 소리는 시스템 알림의 선택 항목으로, 시스템 음량·무음·방해 금지 설정을 따릅니다. 5개 언어와 밝게·어둡게·시스템 테마를 지원합니다.",
       "tags": [
         "집중 타이머",
         "포모도로",
@@ -1645,17 +1645,17 @@
         "Android 7+ · arm64"
       ],
       "highlights": [
-        "제목 표시줄이 이어지는 따뜻한 한 열 화면에 큰 진행 링, 선택 목표, 명확한 시작·일시 정지·계속 동작을 배치했습니다.",
+        "이어지는 제목 표시줄과 링 안의 둥근 버튼. 그림자 없는 닫힌 링은 경과 시간을, 숫자는 남은 시간을 보여 줍니다.",
         "집중·짧은 휴식·긴 휴식. 기본 25 / 5 / 15분, 1–180분 맞춤 설정, 다음 세션 자동 시작 없음.",
-        "macOS·Windows·Linux에서 이동 및 항상 위에 표시를 지원하는 미니 타이머. macOS 버전은 WidgetKit이 아닌 앱의 플로팅 창입니다.",
+        "링·토마토·캡슐 세 가지 미니 타이머. 이동·고정·밝은/어두운 모습을 지원하며 macOS는 WidgetKit이 아닌 앱의 창입니다. macOS에서 미니 타이머를 항상 위에 표시하도록 고정하면 다른 앱의 전체 화면 공간 위에서도 시간을 확인할 수 있습니다.",
         "macOS 메뉴 막대에서 남은 시간을 보고 패널로 타이머, 미니 타이머 표시 및 메인 창 열기를 조작합니다.",
-        "Android 7+ arm64의 네이티브 AppWidget. 앱과 같은 Rust 타이머로 홈 화면에서 시작·일시 정지·계속하기.",
+        "Android 7+ arm64의 실제 AppWidget. 세 가지 스타일과 네이티브 카운트다운으로 시작·일시 정지·계속하기.",
         "데스크톱 종료 후에는 일시 정지 복원. Android는 같은 부팅 중 프로세스 회수 후 복원 가능하며 재부팅·정보 확인 불가 시 일시 정지.",
         "완료와 조기 종료를 나누어 기기에 저장합니다. 최근 500개 기록과 최대 366개 날짜의 합계를 보관하며 계정은 필요 없습니다.",
-        "5개 언어와 밝게·어둡게·시스템 테마, 선택 완료 알림, Sugar의 독창적인 아이콘 및 MIT 오픈 소스."
+        "5개 언어, 로컬 기록, 독창적인 도형과 MIT 소스. 실제 알림 권한 상태, 테스트 알림과 선택 가능한 시스템 알림음."
       ],
-      "seoTitle": "Focus by Sugar | 데스크톱 미니 타이머와 Android 홈 화면 위젯",
-      "seoDescription": "macOS, Windows, Linux, Android 7+ arm64용 오픈 소스 집중 타이머. 따뜻한 한 열 화면, 데스크톱 플로팅 창, macOS 메뉴 막대의 남은 시간과 네이티브 Android AppWidget을 제공합니다. 같은 기기의 Rust 타이머, 로컬 기록, 5개 언어, 밝고 어두운 테마. Sugar 제작, MIT 라이선스.",
+      "seoTitle": "Focus by Sugar | 세 가지 위젯과 차분한 집중 타이머",
+      "seoDescription": "macOS·Windows·Linux·Android용 오픈 소스 집중 타이머. 링·토마토·캡슐, 메뉴 막대의 남은 시간, 실제 Android 위젯, 로컬 기록, 5개 언어와 선택 가능한 시스템 알림. Sugar 제작.",
       "content": {
         "type": "doc",
         "content": [
@@ -1676,7 +1676,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "글쓰기, 독서, 눈앞의 작은 업무처럼 지금 하고 싶은 일 하나를 골라 보세요. Focus는 따뜻한 한 열 화면에 모드, 선택 목표, 큰 진행 링과 주요 동작을 모았습니다. 제목 표시줄은 화면과 자연스럽게 이어지고 macOS의 실제 창 버튼을 유지합니다. 통계와 설정은 필요할 때 열 수 있습니다."
+                "text": "읽을 한 장, 쓸 글, 눈앞의 작은 일 하나를 고르세요. Focus는 제목 표시줄을 메인 화면에 자연스럽게 이어 놓고, 선택 목표와 평면의 닫힌 링, 둥근 기본 동작을 중심에 배치했습니다. 숫자는 카운트다운하고 주황색 호는 집중한 시간에 따라 늘어납니다. 네 개의 점은 실제 완료한 세션을 나타냅니다. 아래의 작은 영역에서 위젯 스타일과 표시를 선택하고 통계와 설정도 바로 열 수 있습니다."
               }
             ]
           },
@@ -1756,7 +1756,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "macOS, Windows, Linux의 미니 타이머는 이동과 항상 위에 표시를 지원하며 모드, 남은 시간, 목표와 진행 상황을 보여 줍니다. 시작·일시 정지·계속하기도 바로 사용할 수 있습니다. 메인 창 열기와 미니 타이머 숨기기는 별도 동작이며, 숨겨도 타이머를 멈추거나 끝내지 않습니다. 데스크톱 미니 타이머는 앱의 플로팅 창으로, macOS 버전은 Apple WidgetKit 시스템 위젯이 아닙니다."
+                "text": "링·토마토·캡슐은 같은 타이머를 보여 주는 세 가지 모습입니다. 링은 그림자 없는 평면, 토마토는 따뜻한 색과 작은 잎, 캡슐은 적은 공간에 어울립니다. 메인 화면이나 설정에서 선택하고 밝고 어두운 모습으로 사용할 수 있습니다. macOS·Windows·Linux에서는 이동과 항상 위에 표시를 지원하는 앱의 플로팅 창이며 macOS 버전은 Apple WidgetKit 시스템 위젯이 아닙니다. 시간을 누르면 메인 창이 열리고, 일시 정지·계속·고정·숨기기를 직접 조작합니다. 숨겨도 타이머는 계속됩니다. macOS에서 미니 타이머를 항상 위에 표시하도록 고정하면 다른 앱의 전체 화면 공간 위에서도 시간을 확인할 수 있습니다."
               }
             ]
           },
@@ -1786,7 +1786,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Android 7+ arm64는 네이티브 시스템 AppWidget을 사용합니다. Focus를 홈 화면에 추가하면 카운트다운, 목표와 진행 상황을 확인하고 바로 시작·일시 정지·계속할 수 있습니다. 내용을 누르면 앱을 엽니다. 이동, 크기 조정과 삭제는 런처가 관리하므로 데스크톱의 항상 위에 표시·닫기 버튼을 넣지 않습니다."
+                "text": "Android 7+ arm64는 실제 시스템 AppWidget을 사용하며 링·토마토·캡슐을 제공합니다. 홈 화면에서 네이티브 카운트다운을 보고 바로 시작·일시 정지·계속할 수 있으며 내용을 누르면 앱이 열립니다. 위치, 크기와 삭제는 런처가 관리합니다. 작은 크기에서는 보조 문구를 줄여 시간과 조작 버튼을 잘 보이게 유지합니다."
               }
             ]
           },
@@ -1888,7 +1888,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "간체 중국어, 번체 중국어, 영어, 일본어, 한국어를 전환하고 밝게·어둡게·시스템 테마를 선택할 수 있습니다. 타이머와 기록은 기기에 저장하며 계정, 광고, 분석 추적이 없습니다. 완료 알림은 기본으로 꺼져 있고 켤 때 권한을 요청합니다. 다음 세션은 직접 시작하며 완료가 다른 앱의 포커스를 빼앗지 않습니다."
+                "text": "5개 언어와 밝게·어둡게·시스템 테마를 선택할 수 있습니다. 타이머와 기록은 기기에 저장하며 계정, 광고, 분석 추적이 없습니다. 완료 알림은 기본으로 꺼져 있고 직접 켜거나 테스트할 때만 권한을 요청합니다. 설정에서 실제 권한 상태, 시스템 설정 안내와 테스트 알림을 확인하세요. 완료할 때 시스템 알림 한 건을 사용하고, 원하면 시스템 알림음을 함께 재생합니다. 음량·무음·방해 금지는 시스템 설정을 따릅니다. 다음 세션은 직접 시작하며 다른 앱의 포커스를 빼앗지 않습니다."
               }
             ]
           },

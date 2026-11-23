@@ -10,22 +10,34 @@
 
 <p align="center"><a href="https://github.com/makersns/focus-timer/actions/workflows/ci.yml"><img src="https://github.com/makersns/focus-timer/actions/workflows/ci.yml/badge.svg" alt="Build and tests" /></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-90a184" alt="MIT license" /></a> <a href="https://github.com/makersns/focus-timer/releases/latest"><img src="https://img.shields.io/github/v/release/makersns/focus-timer?color=d8986f" alt="Latest release" /></a></p>
 
-![Focus: a warm, uncluttered timer](docs/images/focus-light.png)
+![Focus in light appearance, with a flat dial and three widget styles](docs/images/focus-light.png)
 
 ## A little less to manage
 
-Choose what you want to work on, pick a duration, and begin. Focus keeps the main screen simple: one timer, one intention, and one clear next action. Breaks are a deliberate choice; the app never starts another round for you.
+Choose a chapter, a piece of writing or one small task. Focus brings the title bar into the main surface and puts the optional intention, flat continuous ring and round primary control together. Digits count down while the orange arc grows with time spent. Four cycle dots reflect completed sessions. Widget styles and visibility sit in a small shelf below; statistics and settings stay close at hand.
 
+- **A calmer main window.** An integrated title bar, a flat continuous ring, and the primary action inside the dial. Orange progress shows time already spent.
 - **Your rhythm.** Focus, short break, and long break, with 25/5/15-minute defaults and custom durations from 1 to 180 minutes.
-- **Time at a glance.** A live macOS menu-bar countdown and a draggable, pinnable desktop mini timer keep your remaining time visible while you work.
+- **Time at a glance.** A live macOS menu-bar countdown and Ring, Tomato or Capsule desktop mini timers keep the same remaining time visible while you work. Drag a mini timer into place or pin it above other windows.
 - **A real Android widget.** Add Focus to your home screen, then start, pause, or resume without opening the full app. The widget and the app share the same native timer.
 - **Considerate recovery.** Quitting on desktop pauses and saves. Android can recover an active round after same-boot process reclamation; reboot recovery is paused.
 - **Honest records.** Completed sessions and early-ended focus time are shown separately. Recent sessions and daily totals stay on your device.
 - **Make it yours.** Light, dark, or system appearance; Simplified Chinese, Traditional Chinese, English, Japanese, and Korean.
 - **Quiet by default.** No account, ads, analytics, or automatic next round. Completion notifications are optional.
 - **Comfortable controls.** Keyboard support, labeled controls, reduced-motion support, and a layout that adapts to smaller windows.
+- **Clear reminder controls.** Actual system permission status, settings guidance, a test reminder, and optional system notification sound.
 
-<table><tr><td><img src="docs/images/focus-dark.png" alt="Focus in dark appearance" /></td><td><img src="docs/images/focus-settings.png" alt="Focus preferences" /></td></tr></table>
+| Dark appearance | Reminder settings |
+| --- | --- |
+| <img src="docs/images/focus-dark.png" width="360" alt="Focus in dark appearance, showing remaining time and elapsed progress" /> | <img src="docs/images/focus-settings.png" width="360" alt="Reminder settings with permission status, system sound and a test notification" /> |
+
+## Three looks. The same timer.
+
+**Ring** is flat, continuous and shadow-free. **Tomato** adds warm color and a small leaf crown. **Capsule** keeps a compact footprint. Choose a style from the main window or Settings without resetting your round. Digits count down while colored progress grows with elapsed time; it freezes on pause, fills on completion and clears on reset. Tomato uses a contrasting pale arc for readability.
+
+| Ring | Tomato | Capsule |
+| --- | --- | --- |
+| <img src="docs/images/focus-mini.png" width="230" alt="The light Ring mini timer, with a flat face and continuous track" /> | <img src="docs/images/focus-mini-tomato.png" width="230" alt="The Tomato mini timer, with warm color and a clear progress outline" /> | <img src="docs/images/focus-mini-capsule.png" width="300" alt="The Capsule mini timer, with a compact horizontal layout and quick controls" /> |
 
 ## The timer stays where you need it
 
@@ -36,11 +48,19 @@ Choose what you want to work on, pick a duration, and begin. Focus keeps the mai
 | Android | A native home-screen AppWidget with countdown and pause/resume controls |
 | Linux | Floating mini timer and system tray where supported by the desktop environment |
 
-The macOS and Windows components are lightweight floating windows. The Android component is a system launcher widget. Hiding a desktop component leaves the timer running; showing it again displays the same round. Timer updates never bring a window to the front.
+The macOS and Windows components are lightweight floating app windows; the macOS version is not an Apple WidgetKit system widget. Android uses a native home-screen AppWidget. All surfaces on a device share one timer. Click the desktop clock to open the main window. Hiding a component leaves the round running, and timer updates never bring a window to the front. On macOS, pin the mini timer to keep it visible above another app in a full-screen Space.
 
-| Desktop component | Android home-screen widget |
+| Dark Ring | Android home-screen widget |
 | --- | --- |
-| <img src="docs/images/focus-mini.png" width="360" alt="Focus floating mini timer" /><br /><br /><img src="docs/images/focus-mini-dark.png" width="360" alt="Focus floating mini timer in dark appearance" /> | <img src="docs/images/focus-android-widget.png" width="220" alt="Focus Android home-screen widget" /> |
+| <img src="docs/images/focus-mini-dark.png" width="260" alt="The dark Ring mini timer, displaying the same round" /> | <img src="docs/images/focus-android-widget.png" width="220" alt="The native Ring timer widget on the Android home screen" /> |
+
+<p align="center"><img src="docs/images/focus-menu-bar.png" width="640" alt="Live macOS menu-bar time and its native control panel" /></p>
+
+## Reminders when you want them
+
+Completion notifications start off. Enable them or explicitly test them to request permission. Settings shows the actual state, offers a system-settings action or clear guidance, and lets you send a test without changing the timer or session records.
+
+Sound is an optional part of the completion notification, played by the operating system. Each completion uses one notification and follows system volume, mute and Do Not Disturb settings. The browser preview clearly identifies these as installed-app features.
 
 ## Download
 

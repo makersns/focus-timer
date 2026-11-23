@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef, type PointerEvent } from "react";
-import { AlertCircle, Coffee, LoaderCircle, Maximize, Pause, Pin, PinOff, Play, X } from "lucide-react";
+import { AlertCircle, Coffee, LoaderCircle, Pause, Pin, PinOff, Play, X } from "lucide-react";
 import { backend } from "../lib/backend";
+import { elapsedFraction } from "../lib/progress";
 import type { FocusBackend } from "../types";
 import { formatClock, modeKey } from "../i18n";
 import { performPrimaryAction, primaryLabel, statusLabel, useFocusClient } from "./useFocusClient";
+import { WidgetArtwork } from "./WidgetArtwork";
+import "../widgets.css";
 
 export default function MiniTimer({ api = backend }: { api?: FocusBackend }) {
-  const { snapshot, runtime, accept, run, busy, loadFailed, retry, feedback, setFeedback, announcement, locale, t } = useFocusClient(api, "mini");
+  const { snapshot, runtime, accept, run, busy, loadFailed, retry, feedback, setFeedback, announcement, t } = useFocusClient(api, "mini");
   const primaryButton = useRef<HTMLButtonElement>(null);
   const supported = runtime?.desktopWidget === true;
   const toggleTimer = useCallback(() => {
@@ -56,29 +59,27 @@ export default function MiniTimer({ api = backend }: { api?: FocusBackend }) {
   </section>;
 
   const timer = snapshot.timer;
+  const variant = snapshot.preferences.miniTimerStyle;
   const seconds = Math.max(0, Math.ceil(timer.remainingMs / 1000));
-  const progress = Math.min(100, Math.max(0, (timer.durationMs - timer.remainingMs) / Math.max(1, timer.durationMs) * 100));
+  const progress = elapsedFraction(timer);
   const intent = timer.mode === "focus" ? timer.intent.trim() : t("breakIntention");
-  const title = locale === "en" && timer.mode === "focus" ? "Focus" : "Focus · " + t(modeKey(timer.mode));
   const PrimaryIcon = busy ? LoaderCircle : timer.status === "running" ? Pause : timer.status === "completed" && timer.mode === "focus" ? Coffee : Play;
 
-  return <section className="mini-shell" data-status={timer.status} data-mode={timer.mode} aria-label={t("miniTimer")}>
-    <header className="mini-header">
-      <div className="mini-drag-area" onPointerDown={drag} title={supported ? t("dragWindow") : t("desktopOnly")}><strong>{title}</strong></div>
-      <div className="mini-header-actions">
-        {snapshot.persistenceError && <button type="button" className="mini-icon-button mini-save-error" aria-label={t("persistenceError")} title={t("persistenceError")} onClick={openMain} disabled={!supported}><AlertCircle size={15} /></button>}
-        <button type="button" className="mini-icon-button" data-testid="mini-pin" aria-pressed={snapshot.preferences.miniTimerAlwaysOnTop} disabled={busy || !supported} title={t(snapshot.preferences.miniTimerAlwaysOnTop ? "unpinMiniTimer" : "pinMiniTimer")} aria-label={t(snapshot.preferences.miniTimerAlwaysOnTop ? "unpinMiniTimer" : "pinMiniTimer")} onClick={togglePin}>{snapshot.preferences.miniTimerAlwaysOnTop ? <Pin size={16} /> : <PinOff size={16} />}</button>
-        <button type="button" className="mini-icon-button" data-testid="mini-expand" disabled={!supported} title={t("openMainWindow")} aria-label={t("openMainWindow")} onClick={openMain}><Maximize size={16} /></button>
-        <button type="button" className="mini-icon-button" data-testid="mini-close" disabled={busy || !supported} title={t("closeMiniTimer")} aria-label={t("closeMiniTimer")} onClick={hide}><X size={18} /></button>
-      </div>
+  return <section className={"focus-widget focus-widget-" + variant} data-style={variant} data-status={timer.status} data-mode={timer.mode} aria-label={t("miniTimer")}>
+    <WidgetArtwork variant={variant} progress={progress} />
+    <div className="widget-drag-surface" onPointerDown={drag} title={supported ? t("dragWindow") : t("desktopOnly")} aria-hidden="true" />
+    <header className="widget-actions">
+      {snapshot.persistenceError && <button type="button" className="widget-icon-button mini-save-error" aria-label={t("persistenceError")} title={t("persistenceError")} onClick={openMain} disabled={!supported}><AlertCircle size={15} /></button>}
+      <button type="button" className="widget-icon-button" data-testid="mini-pin" aria-pressed={snapshot.preferences.miniTimerAlwaysOnTop} disabled={busy || !supported} title={t(snapshot.preferences.miniTimerAlwaysOnTop ? "unpinMiniTimer" : "pinMiniTimer")} aria-label={t(snapshot.preferences.miniTimerAlwaysOnTop ? "unpinMiniTimer" : "pinMiniTimer")} onClick={togglePin}>{snapshot.preferences.miniTimerAlwaysOnTop ? <Pin size={15} /> : <PinOff size={15} />}</button>
+      <button type="button" className="widget-icon-button" data-testid="mini-close" disabled={busy || !supported} title={t("closeMiniTimer")} aria-label={t("closeMiniTimer")} onClick={hide}><X size={17} /></button>
     </header>
-    <div className="mini-clock-row">
+    <button type="button" className="widget-open" data-testid="mini-expand" disabled={!supported} title={t("openMainWindow") + (intent ? " · " + intent : "")} aria-label={t("remaining", { minutes: Math.floor(seconds / 60), seconds: seconds % 60 }) + " · " + t("openMainWindow")} aria-describedby="mini-intention-help" onClick={openMain}>
       <time data-testid="mini-timer-clock" className={timer.durationMs >= 6_000_000 ? "long-duration" : undefined} role="timer" aria-live="off" aria-label={t("remaining", { minutes: Math.floor(seconds / 60), seconds: seconds % 60 })}>{formatClock(timer.remainingMs)}</time>
-      <button ref={primaryButton} type="button" className="mini-timer-button" data-testid="mini-timer-toggle" disabled={busy || !supported} onClick={toggleTimer} title={t(primaryLabel(snapshot))} aria-label={t(primaryLabel(snapshot))}><PrimaryIcon className={busy ? "spinner" : ""} size={22} fill={PrimaryIcon === Play || PrimaryIcon === Pause ? "currentColor" : "none"} /></button>
-    </div>
-    <p className="mini-intention" title={intent}>{!supported && runtime ? t("miniPreview") : <>{timer.status !== "running" && <span className="mini-state">{t(statusLabel(snapshot))}{intent ? " · " : ""}</span>}{intent || (timer.status === "running" ? t(statusLabel(snapshot)) : "")}</>}</p>
-    <div className="mini-progress" role="progressbar" aria-label={t("progress")} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)}><span style={{ width: progress + "%" }} /></div>
-    {feedback && <div className="mini-feedback" role="alert"><span>{t(feedback.key)}</span><button type="button" className="mini-icon-button" aria-label={t("dismiss")} onClick={() => setFeedback(null)}><X size={14} /></button></div>}
+      <span className="widget-state">{!supported && runtime ? t("miniPreview") : t(statusLabel(snapshot))}</span>
+    </button>
+    <button ref={primaryButton} type="button" className="widget-timer-button" data-testid="mini-timer-toggle" disabled={busy || !supported} onClick={toggleTimer} title={t(primaryLabel(snapshot))} aria-label={t(primaryLabel(snapshot))}><PrimaryIcon className={busy ? "spinner" : ""} size={20} fill={PrimaryIcon === Play || PrimaryIcon === Pause ? "currentColor" : "none"} /></button>
+    {feedback && <div className="widget-feedback" role="alert"><span>{t(feedback.key)}</span><button type="button" className="widget-icon-button" aria-label={t("dismiss")} onClick={() => setFeedback(null)}><X size={14} /></button></div>}
+    <p className="sr-only" id="mini-intention-help">{t(modeKey(timer.mode))}{intent ? " · " + intent : ""}</p>
     <p className="sr-only" role="status" aria-live="polite">{announcement}</p>
   </section>;
 }

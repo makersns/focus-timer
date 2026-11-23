@@ -8,24 +8,34 @@
 
 <p align="center"><a href="https://github.com/makersns/focus-timer/releases/latest">下载客户端</a> · <a href="https://sugar.makersns.com/projects/focus?lang=zh-CN">作品介绍</a> · <a href="https://github.com/makersns/focus-timer/issues">反馈问题</a> · <a href="https://sugar.makersns.com">作者主页</a></p>
 
-![Focus 浅色主界面](docs/images/focus-light.png)
+![Focus 浅色主窗口：平面圆环与三款组件选择](docs/images/focus-light.png)
 
 ## 从一件小事开始
 
-写下这次想完成的事，选择一段时间，然后开始。主界面只保留计时、一个可选的小目标，以及清楚的开始或暂停按钮。完成后是否休息、何时开始下一轮，都由你决定。
+写作、阅读，或手头的一项工作，先选一件想完成的事。Focus 把标题栏融入主窗口，将可选目标、平面闭合圆环和圆环内的主要操作排在中心。数字倒计时，橙色随已投入的时间增长；底部的四个圆点对应真实完成轮次。小组件样式和显示开关放在底部，统计与设置随时可打开。
 
+- **统一的新界面**：融合标题栏，主要操作放进平面闭合圆环；橙色显示已经投入的时间。
 - **适合自己的节奏**：专注、短休息、长休息，默认 25 / 5 / 15 分钟；支持 1–180 分钟的自定义时长。
-- **不用一直打开主窗口**：macOS 菜单栏直接显示动态倒计时；桌面悬浮小组件可拖动、可置顶，随时查看进度。
+- **不用一直打开主窗口**：macOS 菜单栏直接显示动态倒计时；圆环、番茄、胶囊三款悬浮组件可拖动、可置顶，随时查看同一轮进度。
 - **真正的 Android 桌面组件**：添加到手机主屏幕，直接开始、暂停或继续，与应用共用同一个计时状态。
 - **符合平台的恢复方式**：桌面端退出时暂停保存；Android 同次开机内被系统回收后可恢复当前计时，设备重启后恢复为暂停。
 - **真实的记录**：完整完成的轮次与提前结束的专注时间分开记录，休息时间不计入专注。
 - **五种界面语言**：简体中文、繁體中文、English、日本語、한국어；支持浅色、深色和跟随系统。
 - **默认安静**：无需账号，没有广告和统计追踪，不自动开始下一轮；完成通知按需开启。
 - **顺手的操作**：空格键控制计时，清楚的按钮文字，减少动态效果支持，以及适应小窗口的布局。
+- **提醒清楚可控**：真实通知权限状态、系统设置指引、测试提醒，以及可选的系统提示音。
 
-| 深色外观 | 偏好设置 |
+| 深色外观 | 提醒设置 |
 | --- | --- |
-| ![Focus 深色主界面](docs/images/focus-dark.png) | ![Focus 设置界面](docs/images/focus-settings.png) |
+| <img src="docs/images/focus-dark.png" width="360" alt="Focus 深色主窗口：倒计时与已投入时间进度" /> | <img src="docs/images/focus-settings.png" width="360" alt="提醒设置：通知权限、系统声音与测试提醒" /> |
+
+## 三种样式，同一计时
+
+圆环保持平面、闭合的描边；番茄用暖色和叶片增添一点轻松感；胶囊让时间占用更少空间。主窗口与设置中的样式卡片同步控制组件，切换样式不会重置计时。数字持续倒数，橙色进度随已经投入的时间增长；暂停时停住，完成时填满，重置后归零。番茄使用对比更清楚的浅色描边。
+
+| 圆环 | 番茄 | 胶囊 |
+| --- | --- | --- |
+| <img src="docs/images/focus-mini.png" width="230" alt="浅色圆环悬浮计时：平面外观与闭合轨道" /> | <img src="docs/images/focus-mini-tomato.png" width="230" alt="番茄悬浮计时：暖色外形与清楚的进度描边" /> | <img src="docs/images/focus-mini-capsule.png" width="300" alt="胶囊悬浮计时：紧凑横向布局与快捷操作" /> |
 
 ## 把计时放在顺手的位置
 
@@ -36,11 +46,19 @@
 | Android | 真正的主屏幕 AppWidget，支持倒计时及暂停、继续 |
 | Linux | 悬浮小组件；系统托盘取决于桌面环境 |
 
-macOS 和 Windows 的组件是轻量悬浮窗口，Android 使用系统桌面组件。关闭悬浮窗只会隐藏组件；再次打开仍是同一轮计时。每秒更新时间不会把窗口突然顶到其他应用前面。
+macOS 和 Windows 的组件是轻量应用悬浮窗；macOS 版不是 Apple WidgetKit 系统组件。Android 使用原生主屏幕 AppWidget。同一设备上的各个界面共用同一计时，点击桌面组件的时间可打开主窗口。隐藏组件不会暂停计时；每秒更新时间不会把窗口突然顶到其他应用前面。在 macOS 中，将小组件置顶后，也能在其他应用的全屏空间上方查看计时。
 
-| 桌面悬浮组件 | Android 主屏幕组件 |
+| 深色圆环组件 | Android 主屏幕组件 |
 | --- | --- |
-| <img src="docs/images/focus-mini.png" width="360" alt="Focus 桌面悬浮计时" /><br /><br /><img src="docs/images/focus-mini-dark.png" width="360" alt="Focus 深色桌面悬浮计时" /> | <img src="docs/images/focus-android-widget.png" width="220" alt="Focus Android 主屏幕组件" /> |
+| <img src="docs/images/focus-mini-dark.png" width="260" alt="深色圆环悬浮计时：同一轮计时的另一种外观" /> | <img src="docs/images/focus-android-widget.png" width="220" alt="Android 主屏幕上的原生圆环计时小组件" /> |
+
+<p align="center"><img src="docs/images/focus-menu-bar.png" width="640" alt="macOS 菜单栏动态计时与原生快捷面板" /></p>
+
+## 需要时，再提醒
+
+系统完成通知默认关闭。开启或主动测试时再申请权限，设置会显示当前状态，并提供系统设置入口或清楚的手动指引。“测试提醒”可以先检查系统显示与声音，不改变当前计时或完成记录。
+
+声音是完成通知的可选项，由操作系统随通知播放。提醒遵循系统音量、静音和勿扰设置，每次结束只使用一条系统通知。浏览器预览会如实说明这些能力需要安装客户端。
 
 ## 下载与安装
 

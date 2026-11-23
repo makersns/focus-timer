@@ -3,14 +3,17 @@ export type TimerStatus = "idle" | "running" | "paused" | "completed";
 export type Locale = "zh-CN" | "zh-TW" | "en" | "ja" | "ko";
 export type Language = "system" | Locale;
 export type Theme = "system" | "light" | "dark";
+export type MiniTimerStyle = "ring" | "tomato" | "capsule";
 
 export interface Preferences {
   durations: Record<TimerMode, number>;
   language: Language;
   theme: Theme;
   notificationsEnabled: boolean;
+  soundEnabled: boolean;
   closeToTray: boolean;
   miniTimerEnabled: boolean;
+  miniTimerStyle: MiniTimerStyle;
   miniTimerAlwaysOnTop: boolean;
 }
 export interface TimerState {
@@ -73,6 +76,20 @@ export interface WidgetRequest {
   supported: boolean;
   requested: boolean;
 }
+export type NotificationPermission = "prompt" | "granted" | "denied" | "unknown" | "unsupported";
+export interface NotificationStatus {
+  permission: NotificationPermission;
+  canRequest: boolean;
+  notificationsAllowed: boolean | null;
+  channelEnabled: boolean | null;
+  soundAllowed: boolean | null;
+  settingsAvailable: boolean;
+}
+export interface NotificationTestResult {
+  submitted: boolean;
+  soundRequested: boolean;
+  status: NotificationStatus;
+}
 export interface FocusBackend {
   readonly native: boolean;
   getRuntimeInfo(): Promise<RuntimeInfo>;
@@ -81,7 +98,11 @@ export interface FocusBackend {
   updatePreferences(preferences: Preferences): Promise<Snapshot>;
   clearHistory(): Promise<Snapshot>;
   subscribe(listener: (snapshot: Snapshot) => void): Promise<() => void>;
-  requestNotifications(): Promise<boolean>;
+  subscribeNotificationErrors(listener: () => void): Promise<() => void>;
+  getNotificationStatus(sound: boolean): Promise<NotificationStatus>;
+  requestNotifications(sound: boolean): Promise<NotificationStatus>;
+  openNotificationSettings(sound: boolean): Promise<void>;
+  testNotification(sound: boolean): Promise<NotificationTestResult>;
   setMiniTimerVisible(visible: boolean): Promise<Snapshot>;
   showMainWindow(): Promise<void>;
   startDragging(): Promise<void>;

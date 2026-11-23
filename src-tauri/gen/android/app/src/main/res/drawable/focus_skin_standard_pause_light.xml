@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Original geometry from public/widgets; clocks and actions remain native views. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="40dp" android:height="40dp" android:viewportWidth="40" android:viewportHeight="40">
+    <path android:fillColor="#E8A06E" android:pathData="M20,0 A20,20 0,1 1,20,40 A20,20 0,1 1,20,0 Z"/>
+    <path android:fillColor="#FFFAF1" android:pathData="M14,12 H18 V28 H14 Z M22,12 H26 V28 H22 Z"/>
+</vector>

@@ -9,6 +9,16 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- Status checks only query the system screens that Focus can open. -->
+    <queries>
+        <intent><action android:name="android.settings.APP_NOTIFICATION_SETTINGS" /></intent>
+        <intent><action android:name="android.settings.CHANNEL_NOTIFICATION_SETTINGS" /></intent>
+        <intent>
+            <action android:name="android.settings.APPLICATION_DETAILS_SETTINGS" />
+            <data android:scheme="package" />
+        </intent>
+    </queries>
+
     <application
         android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:label="@string/app_name"
         android:theme="@style/Theme.focus_timer"

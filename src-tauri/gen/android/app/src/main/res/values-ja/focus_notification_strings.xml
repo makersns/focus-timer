@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="focus_completion_channel_description">集中や休憩が終わったときの通知です。サウンドはシステム設定に従います。</string>
+    <string name="focus_silent_channel">タイマーの完了 · サイレント</string>
+    <string name="focus_silent_channel_description">音やバイブレーションを使わず、タイマーの完了を知らせます。</string>
+    <string name="focus_completed_title">集中の時間が終わりました</string>
+    <string name="focus_break_completed_title">休憩が終わりました</string>
+    <string name="focus_test_notification_title">Focus · テスト通知</string>
+    <string name="focus_test_notification_message">タイマーが終わると、このような通知でお知らせします。</string>
+</resources>

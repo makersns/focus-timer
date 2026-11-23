@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="focus_skin_ready">Ready to begin</string>
+    <string name="focus_skin_running">Focusing</string>
+    <string name="focus_skin_paused">Paused</string>
+    <string name="focus_skin_completed">Round complete</string>
+</resources>

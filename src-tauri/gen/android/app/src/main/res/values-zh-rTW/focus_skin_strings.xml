@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="focus_skin_ready">準備開始</string>
+    <string name="focus_skin_running">專注進行中</string>
+    <string name="focus_skin_paused">已暫停</string>
+    <string name="focus_skin_completed">本輪已完成</string>
+</resources>

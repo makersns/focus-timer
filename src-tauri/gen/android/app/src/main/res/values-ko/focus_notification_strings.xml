@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="focus_completion_channel_description">집중이나 휴식이 끝나면 알려 줍니다. 알림음은 시스템 설정을 따릅니다.</string>
+    <string name="focus_silent_channel">타이머 완료 · 무음</string>
+    <string name="focus_silent_channel_description">소리나 진동 없이 타이머 완료를 알려 줍니다.</string>
+    <string name="focus_completed_title">집중 시간이 끝났어요</string>
+    <string name="focus_break_completed_title">휴식이 끝났어요</string>
+    <string name="focus_test_notification_title">Focus · 알림 테스트</string>
+    <string name="focus_test_notification_message">타이머가 끝나면 이런 알림으로 알려 드려요.</string>
+</resources>

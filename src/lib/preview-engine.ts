@@ -2,8 +2,8 @@ import type { DailyStat, Preferences, SessionRecord, Snapshot, TimerAction, Time
 
 export const DEFAULT_PREFERENCES: Preferences = {
   durations: { focus: 25, shortBreak: 5, longBreak: 15 },
-  language: "system", theme: "system", notificationsEnabled: false, closeToTray: true,
-  miniTimerEnabled: false, miniTimerAlwaysOnTop: true,
+  language: "system", theme: "system", notificationsEnabled: false, soundEnabled: true, closeToTray: true,
+  miniTimerEnabled: false, miniTimerStyle: "ring", miniTimerAlwaysOnTop: true,
 };
 const MODES: TimerMode[] = ["focus", "shortBreak", "longBreak"];
 const LIMIT_MS = 180 * 60_000;
@@ -22,8 +22,10 @@ export function validPreferences(value: unknown): value is Preferences {
   return MODES.every(mode => integer((value.durations as Record<string, unknown>)[mode], 1, 180))
     && ["system", "zh-CN", "zh-TW", "en", "ja", "ko"].includes(String(value.language))
     && ["system", "light", "dark"].includes(String(value.theme))
-    && typeof value.notificationsEnabled === "boolean" && typeof value.closeToTray === "boolean"
-    && typeof value.miniTimerEnabled === "boolean" && typeof value.miniTimerAlwaysOnTop === "boolean";
+    && typeof value.notificationsEnabled === "boolean" && typeof value.soundEnabled === "boolean"
+    && typeof value.closeToTray === "boolean"
+    && typeof value.miniTimerEnabled === "boolean" && typeof value.miniTimerAlwaysOnTop === "boolean"
+    && ["ring", "tomato", "capsule"].includes(String(value.miniTimerStyle));
 }
 function validHistory(value: unknown): value is SessionRecord {
   if (!record(value)) return false;
@@ -45,9 +47,11 @@ function validDaily(value: unknown): value is DailyStat {
 export function decodePreview(raw: string): Snapshot {
   if (raw.length > 2_000_000) throw new Error("invalid_storage");
   const value: unknown = JSON.parse(raw);
-  // New desktop-view preferences are additive within schema v1.
+  // New reminder and desktop-view preferences are additive within schema v1.
   if (record(value) && record(value.preferences)) {
+    if (!("soundEnabled" in value.preferences)) value.preferences.soundEnabled = true;
     if (!("miniTimerEnabled" in value.preferences)) value.preferences.miniTimerEnabled = false;
+    if (!("miniTimerStyle" in value.preferences)) value.preferences.miniTimerStyle = "ring";
     if (!("miniTimerAlwaysOnTop" in value.preferences)) value.preferences.miniTimerAlwaysOnTop = true;
   }
   if (!record(value) || value.version !== 1 || !record(value.timer) || !validPreferences(value.preferences))

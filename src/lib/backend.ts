@@ -1,6 +1,6 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import type { AndroidTimerStatus, FocusBackend, Preferences, RuntimeInfo, Snapshot, TimerAction, WidgetRequest } from "../types";
+import type { AndroidTimerStatus, FocusBackend, NotificationStatus, NotificationTestResult, Preferences, RuntimeInfo, Snapshot, TimerAction, WidgetRequest } from "../types";
 import { PreviewEngine, type PreviewTransition } from "./preview-engine";
 import { SnapshotGate } from "./snapshot-gate";
 
@@ -32,13 +32,21 @@ class NativeBackend implements FocusBackend {
       if (latest === payload) listener(latest);
     });
   }
+  async subscribeNotificationErrors(listener: () => void): Promise<() => void> {
+    return listen<string>("focus://notification-error", () => listener());
+  }
   async setMiniTimerVisible(visible: boolean): Promise<Snapshot> {
     return this.gate.accept(await invoke<Snapshot>("set_mini_timer_visible", { visible }));
   }
   async showMainWindow(): Promise<void> { await invoke("show_main_window"); }
   async startDragging(): Promise<void> {
     const { getCurrentWindow } = await import("@tauri-apps/api/window");
-    await getCurrentWindow().startDragging();
+    const window = getCurrentWindow();
+    if (window.label === "mini") {
+      await invoke("start_widget_drag");
+    } else {
+      await window.startDragging();
+    }
   }
   async minimizeWindow(): Promise<void> {
     const { getCurrentWindow } = await import("@tauri-apps/api/window");
@@ -63,11 +71,17 @@ class NativeBackend implements FocusBackend {
   async requestExactAlarmPermission(): Promise<WidgetRequest> {
     return invoke<WidgetRequest>("request_exact_alarm_permission");
   }
-  async requestNotifications(): Promise<boolean> {
-    try {
-      const { isPermissionGranted, requestPermission } = await import("@tauri-apps/plugin-notification");
-      return await isPermissionGranted() || await requestPermission() === "granted";
-    } catch { return false; }
+  async getNotificationStatus(sound: boolean): Promise<NotificationStatus> {
+    return invoke<NotificationStatus>("get_notification_status", { sound });
+  }
+  async requestNotifications(sound: boolean): Promise<NotificationStatus> {
+    return invoke<NotificationStatus>("request_notification_permission", { sound });
+  }
+  async openNotificationSettings(sound: boolean): Promise<void> {
+    await invoke("open_notification_settings", { sound });
+  }
+  async testNotification(sound: boolean): Promise<NotificationTestResult> {
+    return invoke<NotificationTestResult>("test_notification", { sound });
   }
   async openExternal(target: keyof typeof DESTINATIONS): Promise<void> {
     await invoke("open_external", { target });
@@ -148,6 +162,7 @@ class BrowserPreviewBackend implements FocusBackend {
       }
     };
   }
+  async subscribeNotificationErrors(_listener: () => void): Promise<() => void> { return () => {}; }
   async setMiniTimerVisible(_visible: boolean): Promise<Snapshot> { throw new Error("desktop_only"); }
   async showMainWindow(): Promise<void> { throw new Error("desktop_only"); }
   async startDragging(): Promise<void> { throw new Error("desktop_only"); }
@@ -161,7 +176,14 @@ class BrowserPreviewBackend implements FocusBackend {
     return { exactAlarmAllowed: false, canRequestExactAlarm: false, notificationsAllowed: false, widgetCount: 0 };
   }
   async requestExactAlarmPermission(): Promise<WidgetRequest> { return { supported: false, requested: false }; }
-  async requestNotifications(): Promise<boolean> { return false; }
+  async getNotificationStatus(_sound: boolean): Promise<NotificationStatus> {
+    return { permission: "unsupported", canRequest: false, notificationsAllowed: false, channelEnabled: null, soundAllowed: null, settingsAvailable: false };
+  }
+  async requestNotifications(sound: boolean): Promise<NotificationStatus> { return this.getNotificationStatus(sound); }
+  async openNotificationSettings(_sound: boolean): Promise<void> { throw new Error("desktop_only"); }
+  async testNotification(sound: boolean): Promise<NotificationTestResult> {
+    return { submitted: false, soundRequested: false, status: await this.getNotificationStatus(sound) };
+  }
   async openExternal(target: keyof typeof DESTINATIONS): Promise<void> {
     const destination = DESTINATIONS[target];
     if (!destination) throw new Error("invalid_destination");

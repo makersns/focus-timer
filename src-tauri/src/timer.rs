@@ -54,6 +54,15 @@ impl Durations {
     }
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum MiniTimerStyle {
+    #[default]
+    Ring,
+    Tomato,
+    Capsule,
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Preferences {
@@ -61,11 +70,19 @@ pub struct Preferences {
     pub language: String,
     pub theme: String,
     pub notifications_enabled: bool,
+    #[serde(default = "default_sound_enabled")]
+    pub sound_enabled: bool,
     pub close_to_tray: bool,
     #[serde(default)]
     pub mini_timer_enabled: bool,
     #[serde(default = "default_mini_timer_always_on_top")]
     pub mini_timer_always_on_top: bool,
+    #[serde(default)]
+    pub mini_timer_style: MiniTimerStyle,
+}
+fn default_sound_enabled() -> bool {
+    // Existing completion notifications used the system's default sound.
+    true
 }
 fn default_mini_timer_always_on_top() -> bool {
     true
@@ -81,9 +98,11 @@ impl Default for Preferences {
             language: "system".into(),
             theme: "system".into(),
             notifications_enabled: false,
+            sound_enabled: true,
             close_to_tray: true,
             mini_timer_enabled: false,
             mini_timer_always_on_top: true,
+            mini_timer_style: MiniTimerStyle::Ring,
         }
     }
 }
@@ -741,6 +760,8 @@ mod tests {
         assert_eq!(value["timer"]["durationMs"], 1_500_000);
         assert_eq!(value["preferences"]["durations"]["shortBreak"], 5);
         assert_eq!(value["preferences"]["notificationsEnabled"], false);
+        assert_eq!(value["preferences"]["soundEnabled"], true);
+        assert_eq!(value["preferences"]["miniTimerStyle"], "ring");
         assert_eq!(value["preferences"]["miniTimerEnabled"], false);
         assert_eq!(value["preferences"]["miniTimerAlwaysOnTop"], true);
         assert!(value.get("dailyStats").is_some());
@@ -785,6 +806,8 @@ mod tests {
         let preferences = legacy["preferences"].as_object_mut().unwrap();
         preferences.remove("miniTimerEnabled");
         preferences.remove("miniTimerAlwaysOnTop");
+        preferences.remove("soundEnabled");
+        preferences.remove("miniTimerStyle");
 
         let restored =
             Engine::restore(&serde_json::to_string(&legacy).unwrap(), START + 90_000).unwrap();
@@ -792,6 +815,8 @@ mod tests {
         assert_eq!(snapshot.version, 1);
         assert!(!snapshot.preferences.mini_timer_enabled);
         assert!(snapshot.preferences.mini_timer_always_on_top);
+        assert!(snapshot.preferences.sound_enabled);
+        assert_eq!(snapshot.preferences.mini_timer_style, MiniTimerStyle::Ring);
         assert_eq!(snapshot.preferences, before.preferences);
         assert_eq!(snapshot.timer.status, TimerStatus::Paused);
         assert_eq!(snapshot.timer.remaining_ms, before.timer.remaining_ms);
@@ -806,11 +831,49 @@ mod tests {
 
         legacy["preferences"]["miniTimerEnabled"] = true.into();
         legacy["preferences"]["miniTimerAlwaysOnTop"] = false.into();
+        legacy["preferences"]["soundEnabled"] = false.into();
+        legacy["preferences"]["miniTimerStyle"] = "capsule".into();
         let explicit = Engine::restore(&serde_json::to_string(&legacy).unwrap(), START + 90_000)
             .unwrap()
             .snapshot();
         assert!(explicit.preferences.mini_timer_enabled);
         assert!(!explicit.preferences.mini_timer_always_on_top);
+        assert!(!explicit.preferences.sound_enabled);
+        assert_eq!(
+            explicit.preferences.mini_timer_style,
+            MiniTimerStyle::Capsule
+        );
+    }
+
+    #[test]
+    fn sound_and_widget_style_preserve_the_current_run_and_reject_invalid_data() {
+        let mut engine = one_minute();
+        run(&mut engine, START);
+        engine.tick(START + 7_000);
+        let before = engine.snapshot();
+        for style in [
+            MiniTimerStyle::Tomato,
+            MiniTimerStyle::Capsule,
+            MiniTimerStyle::Ring,
+        ] {
+            let mut preferences = engine.snapshot().preferences;
+            preferences.sound_enabled = !preferences.sound_enabled;
+            preferences.mini_timer_style = style;
+            let changed = engine
+                .update_preferences(preferences, START + 7_000)
+                .unwrap();
+            assert!(changed.persist);
+            assert!(changed.completed.is_none());
+            assert_eq!(changed.snapshot.timer, before.timer);
+            assert_eq!(changed.snapshot.history, before.history);
+            assert_eq!(changed.snapshot.cycle_completed, before.cycle_completed);
+        }
+        let mut invalid = serde_json::to_value(engine.snapshot()).unwrap();
+        invalid["preferences"]["miniTimerStyle"] = "unrecognized".into();
+        assert!(Engine::restore(&invalid.to_string(), START + 7_000).is_err());
+        invalid["preferences"]["miniTimerStyle"] = "ring".into();
+        invalid["preferences"]["soundEnabled"] = "yes".into();
+        assert!(Engine::restore(&invalid.to_string(), START + 7_000).is_err());
     }
 
     #[test]

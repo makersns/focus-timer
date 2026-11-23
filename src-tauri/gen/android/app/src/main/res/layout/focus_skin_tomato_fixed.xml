@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A distinct layout ID resets RemoteViews' forced color actions when returning
+     to the system-theme layout. Reuse the actual view structure through include. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <include layout="@layout/focus_skin_tomato"
+        android:layout_width="match_parent" android:layout_height="match_parent"/>
+</FrameLayout>

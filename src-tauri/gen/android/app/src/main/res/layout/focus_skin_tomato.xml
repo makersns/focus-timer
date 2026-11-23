@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/focus_widget_root" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="0dp">
+    <FrameLayout android:id="@+id/focus_skin_art_frame" android:layout_width="match_parent" android:layout_height="match_parent" android:importantForAccessibility="no">
+        <ImageView android:id="@+id/focus_skin_art" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:scaleType="fitCenter" android:src="@drawable/focus_skin_tomato_system" android:importantForAccessibility="no"/>
+        <!-- Launcher RemoteViews inflate framework ImageView, not AppCompatImageView; android:tint is required. -->
+    <ImageView tools:ignore="UseAppTint" android:id="@+id/focus_skin_progress" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:scaleType="fitCenter" android:tint="@color/focus_skin_tomato_progress" android:importantForAccessibility="no"/>
+    </FrameLayout>
+    <FrameLayout android:id="@+id/focus_skin_clock_frame" android:layout_width="match_parent" android:layout_height="match_parent">
+        <Chronometer android:id="@+id/focus_widget_clock" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:gravity="center" android:fontFamily="sans-serif-medium" android:fontFeatureSettings="tnum"
+            android:textColor="@color/focus_skin_tomato_ink" android:textSize="44sp" android:includeFontPadding="false"
+            android:singleLine="true" android:countDown="true" android:visibility="gone"/>
+        <TextView android:id="@+id/focus_widget_time" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:gravity="center" android:fontFamily="sans-serif-medium" android:fontFeatureSettings="tnum"
+            android:textColor="@color/focus_skin_tomato_ink" android:textSize="44sp" android:includeFontPadding="false"
+            android:singleLine="true" android:text="@string/focus_widget_preview_time"/>
+    </FrameLayout>
+    <FrameLayout android:id="@+id/focus_skin_state_frame" android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:id="@+id/focus_widget_state" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:gravity="center" android:textColor="@color/focus_skin_tomato_ink" android:textSize="14sp"
+            android:includeFontPadding="false" android:singleLine="true" android:ellipsize="end" android:alpha="0.85"/>
+    </FrameLayout>
+    <FrameLayout android:id="@+id/focus_skin_action_frame" android:layout_width="match_parent" android:layout_height="match_parent">
+        <ImageButton android:id="@+id/focus_widget_action" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:background="@drawable/focus_skin_touch" android:scaleType="fitCenter"
+            android:src="@drawable/focus_skin_tomato_play_system"
+            android:contentDescription="@string/focus_start"/>
+    </FrameLayout>
+</FrameLayout>

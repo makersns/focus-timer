@@ -1,13 +1,15 @@
-import { useId, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import { ArrowUpRight, BarChart3, Check, CircleCheck, Coffee, Leaf, Monitor, Moon, Sun, Trash2 } from "lucide-react";
 import type { AndroidTimerStatus, Locale, Preferences, RuntimeInfo, Snapshot, TimerMode } from "../types";
 import { formatDuration, localDateKey, localeLabels, locales, modeKey, type Translator } from "../i18n";
 import { Modal } from "./Modal";
 import { SelectMenu } from "./SelectMenu";
+import { WidgetStylePicker } from "./WidgetStylePicker";
+import { NotificationSettings, useNotificationAccess, type NotificationApi } from "./NotificationSettings";
 
 const modes: TimerMode[] = ["focus", "shortBreak", "longBreak"];
-export function SettingsPanel({ preferences, runtime, androidStatus, busy, t, onClose, onSave, onExternal, onAddWidget, onRequestExactTiming }: {
-  preferences: Preferences; runtime: RuntimeInfo | null; androidStatus: AndroidTimerStatus | null; busy: boolean; t: Translator; onClose: () => void;
+export function SettingsPanel({ preferences, runtime, androidStatus, notifications, busy, t, onClose, onSave, onExternal, onAddWidget, onRequestExactTiming }: {
+  preferences: Preferences; runtime: RuntimeInfo | null; androidStatus: AndroidTimerStatus | null; notifications: NotificationApi; busy: boolean; t: Translator; onClose: () => void;
   onSave: (preferences: Preferences) => void; onExternal: (target: "author" | "github" | "license") => void;
   onAddWidget: () => void; onRequestExactTiming: () => void;
 }) {
@@ -16,10 +18,17 @@ export function SettingsPanel({ preferences, runtime, androidStatus, busy, t, on
   const [durations, setDurations] = useState<Record<TimerMode, string>>(() => Object.fromEntries(modes.map(mode => [mode, String(preferences.durations[mode])])) as Record<TimerMode, string>);
   const [invalid, setInvalid] = useState(false);
   const id = useId();
-  function submit(event: FormEvent) {
+  const notificationAccess = useNotificationAccess(notifications, draft.soundEnabled);
+  const notificationsRef = useRef<HTMLFieldSetElement>(null);
+  async function submit(event: FormEvent) {
     event.preventDefault();
     const valid = modes.every(mode => /^\d+$/.test(durations[mode]) && Number(durations[mode]) >= 1 && Number(durations[mode]) <= 180);
     if (!valid) { setInvalid(true); return; }
+    if (busy || notificationAccess.busy) return;
+    if (draft.notificationsEnabled && !preferences.notificationsEnabled && !await notificationAccess.prepareToEnable()) {
+      notificationsRef.current?.scrollIntoView({ block: "nearest" });
+      return;
+    }
     onSave({ ...draft, miniTimerEnabled: miniChanged ? draft.miniTimerEnabled : preferences.miniTimerEnabled, miniTimerAlwaysOnTop: preferences.miniTimerAlwaysOnTop, durations: Object.fromEntries(modes.map(mode => [mode, Number(durations[mode])])) as Record<TimerMode, number> });
   }
   return <Modal title={t("preferencesTitle")} description={t("preferencesSubtitle")} closeLabel={t("close")} onClose={onClose} className="settings-modal">
@@ -38,12 +47,13 @@ export function SettingsPanel({ preferences, runtime, androidStatus, busy, t, on
           ] as const).map(([value, Icon, label]) => <button type="button" key={value} aria-pressed={draft.theme === value} onClick={() => setDraft(previous => ({ ...previous, theme: value }))}><Icon size={18} /><span>{t(label)}</span>{draft.theme === value && <Check size={13} className="theme-check" />}</button>)}</div>
           <div className="select-field"><label id={id + "-language-label"} htmlFor={id + "-language"}>{t("language")}</label><SelectMenu<Preferences["language"]> id={id + "-language"} labelId={id + "-language-label"} value={draft.language} disabled={busy} options={[{ value: "system", label: t("systemLanguage") }, ...locales.map(locale => ({ value: locale, label: localeLabels[locale], lang: locale }))]} onChange={language => setDraft(previous => ({ ...previous, language }))} /></div>
         </fieldset>
-        <fieldset className="settings-section setting-switches" disabled={busy}>
-          <label className="setting-switch"><span><strong>{t("notifications")}</strong><small>{t("notificationsHelp")}</small></span><input type="checkbox" role="switch" checked={draft.notificationsEnabled} onChange={event => setDraft(previous => ({ ...previous, notificationsEnabled: event.target.checked }))} /></label>
-          {runtime?.tray && <label className="setting-switch"><span><strong>{t("closeToTray")}</strong><small>{t("closeToTrayHelp")}</small></span><input type="checkbox" role="switch" checked={draft.closeToTray} onChange={event => setDraft(previous => ({ ...previous, closeToTray: event.target.checked }))} /></label>}
-        </fieldset>
+        <NotificationSettings sectionRef={notificationsRef} draft={draft} disabled={busy} access={notificationAccess} t={t} onChange={change => setDraft(previous => ({ ...previous, ...change }))} />
+        {runtime?.tray && <fieldset className="settings-section setting-switches" disabled={busy}>
+          <label className="setting-switch"><span><strong>{t("closeToTray")}</strong><small>{t("closeToTrayHelp")}</small></span><input type="checkbox" role="switch" checked={draft.closeToTray} onChange={event => setDraft(previous => ({ ...previous, closeToTray: event.target.checked }))} /></label>
+        </fieldset>}
         <fieldset className="settings-section setting-switches" disabled={busy}>
           <legend>{t("widgetSettings")}</legend>
+          <div className="settings-widget-gallery"><p className="field-help">{t("widgetStyleHelp")}</p><WidgetStylePicker value={draft.miniTimerStyle} disabled={busy} t={t} onChange={miniTimerStyle => setDraft(previous => ({ ...previous, miniTimerStyle }))} /></div>
           {!runtime ? <p className="field-help">{t("checkingDevice")}</p> : runtime.platform === "android" ? <>
             <div className="widget-setting"><div><strong>{t("homeScreenWidget")}</strong><p>{t("homeScreenWidgetHelp")}</p>{androidStatus && <small>{t("homeWidgetCount", { value: androidStatus.widgetCount })}</small>}</div><button type="button" className="button secondary" data-testid="android-widget-add" disabled={!runtime.homeScreenWidget} onClick={onAddWidget}>{t("addHomeScreenWidget")}</button></div>
             {!runtime.homeScreenWidget && <p className="field-help">{t("homeWidgetManual")}</p>}
@@ -52,7 +62,7 @@ export function SettingsPanel({ preferences, runtime, androidStatus, busy, t, on
         </fieldset>
         <section className="about-focus"><img src="/brand-mark.svg" alt="" width="42" height="42" /><div><h3>{t("about")}</h3><p>{t("aboutText")}</p></div><p className="privacy-note">{t("privacy")}</p><div className="about-links"><button type="button" onClick={() => onExternal("author")}>Sugar <ArrowUpRight size={14} /></button><button type="button" onClick={() => onExternal("github")}>{t("github")} <ArrowUpRight size={14} /></button><button type="button" onClick={() => onExternal("license")}>{t("license")} <ArrowUpRight size={14} /></button></div></section>
       </div>
-      <footer className="modal-footer"><button type="button" className="button secondary" onClick={onClose}>{t("cancel")}</button><button type="submit" className="button primary" disabled={busy}>{busy ? t("pending") : t("save")}</button></footer>
+      <footer className="modal-footer"><button type="button" className="button secondary" onClick={onClose}>{t("cancel")}</button><button type="submit" className="button primary" disabled={busy || notificationAccess.busy}>{busy || notificationAccess.busy ? t("pending") : t("save")}</button></footer>
     </form>
   </Modal>;
 }

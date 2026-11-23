@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The pin dialog supplies its own size; flexible preview content must not reuse fixed widget paddings. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/focus_widget_root" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="4dp">
+    <ImageView android:id="@+id/focus_skin_art" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:scaleType="fitCenter" android:src="@drawable/focus_skin_capsule_system" android:importantForAccessibility="no"/>
+    <!-- Launcher RemoteViews inflate framework ImageView, not AppCompatImageView; android:tint is required. -->
+    <ImageView tools:ignore="UseAppTint" android:id="@+id/focus_skin_progress" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:scaleType="fitCenter" android:tint="@color/focus_skin_progress" android:importantForAccessibility="no"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="horizontal" android:gravity="center_vertical" android:baselineAligned="false">
+        <FrameLayout android:importantForAccessibility="no" android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="26"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="47" android:orientation="vertical">
+            <TextView android:id="@+id/focus_widget_time" android:layout_width="match_parent" android:layout_height="40dp"
+    android:gravity="center" android:fontFamily="sans-serif-medium" android:includeFontPadding="false"
+    android:singleLine="true" android:textColor="@color/focus_skin_ink" android:textSize="32sp"
+    android:text="@string/focus_widget_preview_time"/>
+            <TextView android:id="@+id/focus_widget_state" android:layout_width="match_parent" android:layout_height="16dp"
+    android:gravity="center" android:singleLine="true" android:ellipsize="end" android:includeFontPadding="false"
+    android:textColor="@color/focus_skin_secondary" android:textSize="11sp" android:text="@string/focus_skin_ready"/>
+        </LinearLayout>
+        <FrameLayout android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="20">
+            <ImageView android:id="@+id/focus_widget_action" android:layout_width="32dp" android:layout_height="32dp" android:layout_gravity="center"
+    android:src="@drawable/focus_skin_standard_play_system" android:importantForAccessibility="no"/>
+        </FrameLayout>
+        <FrameLayout android:importantForAccessibility="no" android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="7"/>
+    </LinearLayout>
+</FrameLayout>

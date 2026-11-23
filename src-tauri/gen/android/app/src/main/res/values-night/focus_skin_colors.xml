@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="focus_skin_flat">#302D27</color>
+    <color name="focus_skin_ink">#FFF9EE</color>
+    <color name="focus_skin_secondary">#D3C8B7</color>
+    <color name="focus_skin_surface_start">#46443A</color>
+    <color name="focus_skin_surface_end">#302F28</color>
+    <color name="focus_skin_edge">#535145</color>
+    <color name="focus_skin_track">#686255</color>
+    <color name="focus_skin_progress">#EFB083</color>
+    <color name="focus_skin_tomato_start">#5A493E</color>
+    <color name="focus_skin_tomato_end">#3D3630</color>
+    <color name="focus_skin_tomato_ink">#FFF8EC</color>
+    <color name="focus_skin_tomato_progress">#E9AC82</color>
+    <color name="focus_skin_button">#EDAB7B</color>
+    <color name="focus_skin_button_ink">#FFFAF1</color>
+    <color name="focus_skin_tomato_button">#EDAB7B</color>
+    <color name="focus_skin_tomato_button_ink">#FFFAF1</color>
+</resources>
