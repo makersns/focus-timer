@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <string name="focus_widget_title">Focus · 집중 타이머</string>
+ <string name="focus_widget_description">홈 화면에서 집중 타이머를 확인하고 조작하세요.</string>
+ <string name="focus_mode">집중</string>
+ <string name="focus_short_break">짧은 휴식</string>
+ <string name="focus_long_break">긴 휴식</string>
+ <string name="focus_start">시작</string>
+ <string name="focus_pause">일시 정지</string>
+ <string name="focus_resume">계속</string>
+ <string name="focus_widget_gentle">한 번에 한 가지씩.</string>
+ <string name="focus_exact_permission">정확한 타이머 허용</string>
+ <string name="focus_running_channel">실행 중인 타이머</string>
+ <string name="focus_completion_channel">타이머 완료</string>
+ <string name="focus_restoring">타이머를 복원하는 중…</string>
+ <string name="focus_completed_message">집중 시간이 끝났어요. 잠시 쉬어 가세요.</string>
+ <string name="focus_break_completed">휴식이 끝났어요. 준비되면 다시 시작하세요.</string>
+ <string name="focus_next_short_break">짧은 휴식 시작</string>
+ <string name="focus_next_long_break">조금 더 길게 쉬기</string>
+ <string name="focus_next_focus">다음 집중 시작</string>
+</resources>

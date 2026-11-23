@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <string name="focus_widget_title">Focus · Focus timer</string>
+ <string name="focus_widget_description">A quiet focus timer on your home screen.</string>
+ <string name="focus_mode">Focus</string>
+ <string name="focus_short_break">Short break</string>
+ <string name="focus_long_break">Long break</string>
+ <string name="focus_start">Start</string>
+ <string name="focus_pause">Pause</string>
+ <string name="focus_resume">Resume</string>
+ <string name="focus_widget_gentle">One thing at a time.</string>
+ <string name="focus_exact_permission">Allow precise timing</string>
+ <string name="focus_running_channel">Running timer</string>
+ <string name="focus_completion_channel">Session complete</string>
+ <string name="focus_restoring">Restoring your timer…</string>
+ <string name="focus_completed_message">Your focus session is complete. Take a gentle break.</string>
+ <string name="focus_break_completed">Your break is over. Begin again when you are ready.</string>
+ <string name="focus_next_short_break">Take a short break</string>
+ <string name="focus_next_long_break">Take a longer break</string>
+ <string name="focus_next_focus">Start a focus session</string>
+</resources>

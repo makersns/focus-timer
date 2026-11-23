@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <string name="focus_widget_title">Focus · 专注计时</string>
+ <string name="focus_widget_description">在主屏幕查看和控制你的专注计时。</string>
+ <string name="focus_mode">专注</string>
+ <string name="focus_short_break">短休息</string>
+ <string name="focus_long_break">长休息</string>
+ <string name="focus_start">开始</string>
+ <string name="focus_pause">暂停</string>
+ <string name="focus_resume">继续</string>
+ <string name="focus_widget_gentle">一次只做一件事。</string>
+ <string name="focus_exact_permission">允许精确计时</string>
+ <string name="focus_running_channel">正在计时</string>
+ <string name="focus_completion_channel">计时完成</string>
+ <string name="focus_restoring">正在恢复计时…</string>
+ <string name="focus_completed_message">这一段专注完成了。休息一下，再继续吧。</string>
+ <string name="focus_break_completed">休息结束了。准备好后，再开始一段专注。</string>
+ <string name="focus_next_short_break">开始短休息</string>
+ <string name="focus_next_long_break">好好休息一会</string>
+ <string name="focus_next_focus">开始下一段专注</string>
+</resources>

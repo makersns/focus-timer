@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "approvedAt": "2026-11-23",
+  "product": "Focus",
+  "author": "Sugar",
+  "assets": [
+    {
+      "path": "docs/design/approved-focus-ui.png",
+      "role": "approved design reference",
+      "sha256": "8239f4a8900b05dc0e6b26dd377f25e5e293e00ae0afea86b48fae12f6770341",
+      "bytes": 1402270,
+      "shipInRuntime": false
+    },
+    {
+      "path": "public/app-icon.svg",
+      "role": "editable original application icon",
+      "sha256": "ac91a40b39e461287d6cf1dfdbd760734b30d102999a61159c8677e19e49d4b9",
+      "bytes": 1178,
+      "shipInRuntime": true
+    },
+    {
+      "path": "public/brand-mark.svg",
+      "role": "editable compact brand mark",
+      "sha256": "6bcbb8f33ce10f22df49c000ee43988cafbe944d0abf38420624a539748000d7",
+      "bytes": 313,
+      "shipInRuntime": true
+    }
+  ],
+  "generatedNativeIcons": {
+    "directory": "src-tauri/icons",
+    "source": "public/app-icon.svg",
+    "command": "npm run icons"
+  },
+  "releaseScreenshots": {
+    "directory": "docs/images",
+    "policy": "Capture the implemented application; do not publish the design board as an application screenshot."
+  }
+}

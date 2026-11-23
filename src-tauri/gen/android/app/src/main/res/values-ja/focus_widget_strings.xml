@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <string name="focus_widget_title">Focus · 集中タイマー</string>
+ <string name="focus_widget_description">ホーム画面から集中タイマーを確認・操作できます。</string>
+ <string name="focus_mode">集中</string>
+ <string name="focus_short_break">短い休憩</string>
+ <string name="focus_long_break">長い休憩</string>
+ <string name="focus_start">開始</string>
+ <string name="focus_pause">一時停止</string>
+ <string name="focus_resume">再開</string>
+ <string name="focus_widget_gentle">ひとつのことに、少しの時間を。</string>
+ <string name="focus_exact_permission">正確な計時を許可</string>
+ <string name="focus_running_channel">実行中のタイマー</string>
+ <string name="focus_completion_channel">タイマーの完了</string>
+ <string name="focus_restoring">タイマーを復元中…</string>
+ <string name="focus_completed_message">集中の時間が終わりました。ひと息つきましょう。</string>
+ <string name="focus_break_completed">休憩が終わりました。準備ができたら、また始めましょう。</string>
+ <string name="focus_next_short_break">短い休憩を始める</string>
+ <string name="focus_next_long_break">少し長めに休む</string>
+ <string name="focus_next_focus">次の集中を始める</string>
+</resources>

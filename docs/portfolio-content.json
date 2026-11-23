@@ -1,0 +1,2032 @@
+{
+  "id": "focus",
+  "slug": "focus",
+  "sourceLocale": "zh-CN",
+  "category": "application",
+  "demo": false,
+  "sourceAvailable": true,
+  "repoUrl": "https://github.com/makersns/focus-timer",
+  "appUrl": "https://github.com/makersns/focus-timer/releases/latest",
+  "websiteUrl": "https://sugar.makersns.com/projects/focus",
+  "gallery": [],
+  "title": "Focus · 专注计时",
+  "summary": "留一点时间，只做好一件事。Sugar 的开源专注应用支持桌面悬浮计时、macOS 菜单栏动态时间与 Android 主屏幕小组件，以同一 Rust 计时源和本地记录陪你安排节奏。",
+  "description": "Focus 是 Sugar 制作的桌面与 Android 专注应用。暖色单列界面将标题栏融入页面，把模式、可选的小目标、大计时圆环和主要操作放在中心。专注、短休息、长休息默认 25 / 5 / 15 分钟，也可自定义 1–180 分钟；下一轮始终由你主动开始。\n\nmacOS、Windows 和 Linux 提供可拖动、可置顶的悬浮计时窗，macOS 菜单栏直接显示动态剩余时间，并提供快捷控制面板。桌面悬浮窗是应用窗口，macOS 版不是 Apple WidgetKit 系统小组件。Android 7+ arm64 则提供真正的主屏幕 AppWidget，可直接开始、暂停或继续。同一台设备上的界面、组件和菜单栏共享同一个 Rust 计时状态。\n\n桌面端主动退出会暂停并保存，意外终止后从最后检查点以暂停状态恢复。Android 在同次开机内被系统回收后，可核对保存的开机与经过时间信息并继续当前计时；设备重启或恢复信息无法核实时暂停。两种恢复方式分别适应桌面和手机的使用情境。\n\n完成轮次与提前结束的专注时间分开记录，休息不计入专注。数据留在本机，无需账号，没有广告或分析追踪。应用提供简体中文、繁體中文、English、日本語、한국어，以及浅色、深色和跟随系统外观；完成提醒按需开启。原创应用图标和 MIT 开源源码均由 Sugar 在 makersns/focus-timer 持续维护。",
+  "tags": [
+    "专注计时",
+    "番茄钟",
+    "悬浮计时",
+    "菜单栏计时",
+    "Android小组件",
+    "本地数据",
+    "五种语言",
+    "开源"
+  ],
+  "platforms": [
+    "macOS",
+    "Windows",
+    "Linux",
+    "Android 7+ · arm64"
+  ],
+  "highlights": [
+    "暖色单列主界面与融合标题栏：大计时圆环、可选目标和清楚的开始、暂停、继续操作。",
+    "专注、短休息、长休息，默认 25 / 5 / 15 分钟；可自定义 1–180 分钟，不自动开始下一轮。",
+    "macOS、Windows、Linux 提供可拖动、可置顶的应用悬浮计时窗；macOS 版不是 WidgetKit 系统组件。",
+    "macOS 菜单栏直接显示动态剩余时间，快捷面板可控制计时、显示组件或打开主窗口。",
+    "Android 7+ arm64 原生 AppWidget，可在主屏幕开始、暂停或继续；与应用共享同一 Rust 计时源。",
+    "桌面退出后暂停恢复；Android 同次开机内可恢复运行中计时，设备重启或信息无法核实时暂停。",
+    "完成与提前结束分开记录；本机保留最近 500 条记录及最多 366 个日期的汇总，无需账号。",
+    "五种语言，浅色、深色与跟随系统；可选完成提醒、原创图标与 MIT 开源，作者 Sugar。"
+  ],
+  "seoTitle": "Focus 专注计时｜桌面悬浮、macOS 菜单栏与 Android 小组件",
+  "seoDescription": "Sugar 的开源专注应用，面向 macOS、Windows、Linux 与 Android 7+ arm64。暖色单列界面、融合标题栏、可置顶悬浮计时、macOS 菜单栏动态时间和原生 Android AppWidget。同一 Rust 计时源、本地真实记录、五种语言及浅深外观，MIT 开源。",
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "留一点时间，只做好一件事。"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "写作、阅读，或手头的一项工作，先选一件想完成的事。Focus 用暖色单列界面把模式、可选的小目标、大计时圆环和主要操作排在一起。标题栏与页面保持同一表面，macOS 保留真实系统窗口按钮；统计与设置放在需要时再打开的入口中。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "让节奏由你决定"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "专注、短休息、长休息默认分别为 25、5、15 分钟，也能为这一轮选择 1–180 分钟。"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "随时暂停或继续。计时结束后，再决定休息还是开始下一轮，应用不会自动接着运行。"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "意图可以留空。时长、主题和语言各有清楚入口，主画面始终围绕当前这一轮。"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "不用打开主窗口，也能看到时间"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "macOS、Windows 和 Linux 的悬浮计时窗可拖动、可置顶，显示当前模式、剩余时间、意图和进度，并直接开始、暂停或继续。打开主窗口与隐藏小窗各有独立按钮；隐藏只改变窗口可见性，不会结束或暂停计时。它们是应用悬浮窗口，其中 macOS 版不是 Apple WidgetKit 系统小组件。"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "macOS 菜单栏会直接更新剩余时间，展开面板即可控制计时、显示悬浮组件、打开主窗口或退出。Windows 提供系统托盘控制；Linux 托盘取决于桌面环境。计时更新不会把其他应用后面的窗口突然带到前台。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Android 主屏幕上的原生小组件"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Android 7+ arm64 使用真正的系统 AppWidget。把 Focus 添加到主屏幕，即可查看倒计时、当前目标和进度，并直接开始、暂停或继续；点击内容可回到应用。组件的位置、尺寸和移除由手机桌面管理，不套用桌面客户端的置顶或关闭按钮。"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "支持直接添加的桌面会要求你确认；不支持时可长按主屏幕空白处，在“小组件”中找到 Focus。需要准确计时授权的系统版本会提供清楚的设置入口。Android 运行中的系统常驻计时通知，与按需开启的完成提醒分别处理。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "同一设备，共用一个计时源"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "主界面、悬浮窗、菜单栏以及该平台支持的系统组件，都读取同一个本机 Rust 计时状态。界面不会各自启动一套计时器。Android 组件使用系统 Chronometer 显示秒数，由原生服务和到期闹钟处理后台运行与本轮结束；重新打开应用时仍显示同一轮。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "按平台恢复，保留你的进度"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "桌面端主动退出会暂停并立即保存。运行中最长每 30 秒保存一次检查点；意外终止后，恢复最后保存的剩余时间，并等待你继续。意外终止可能丢失最后检查点之后的进度。"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Android 在设备未重启、保存的开机与经过时间信息可核实时，能在进程被系统回收后恢复当前运行中的计时。设备重启或恢复信息无法核实时，则以暂停状态恢复。延迟唤醒最多结算当前这一轮，不会补出未主动开始的后续轮次。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "记录真正投入的时间"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "完整完成一轮专注才增加完成次数。提前结束会保存已经投入的专注时间，并明确区分；休息不会加进专注总时长。最近 500 条记录与最多 366 个日期的每日汇总保存在本机。清空历史与汇总时，正在进行的计时继续运行。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "安静，也可以适合你"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "简体中文、繁體中文、English、日本語、한국어可随时切换，外观支持浅色、深色和跟随系统。计时与记录留在本机，无需账号，没有广告或分析追踪。完成提醒默认关闭，只在你选择开启时请求权限；下一轮由你决定，完成时也不会抢走其他应用的焦点。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "从一个小实验，到独立应用"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Focus 从 Sugar 个人网站中的计时实验发展而来，现在同时面向桌面和 Android。项目使用 Tauri 2、Rust、React 和 TypeScript，配有原创应用图标；界面符号来自 Lucide，源码以 MIT 许可发布于 makersns/focus-timer。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "下载与一起完善"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "目标平台包括 macOS、Windows、Linux 和 Android 7+ arm64。通过 GitHub Releases 查看当前实际提供的安装包、版本说明与 SHA-256 校验值，选择与你的系统和架构对应的文件。如果 Focus 适合你的日常，欢迎点一个 Star，让更多人找到它；问题反馈、建议和翻译改进也都欢迎。"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "下载客户端",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://github.com/makersns/focus-timer/releases/latest",
+                  "target": "_blank",
+                  "rel": "noopener noreferrer"
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " · "
+          },
+          {
+            "type": "text",
+            "text": "查看源码",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://github.com/makersns/focus-timer",
+                  "target": "_blank",
+                  "rel": "noopener noreferrer"
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " · "
+          },
+          {
+            "type": "text",
+            "text": "反馈问题",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://github.com/makersns/focus-timer/issues",
+                  "target": "_blank",
+                  "rel": "noopener noreferrer"
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " · "
+          },
+          {
+            "type": "text",
+            "text": "MIT 许可",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://github.com/makersns/focus-timer/blob/main/LICENSE",
+                  "target": "_blank",
+                  "rel": "noopener noreferrer"
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " · "
+          },
+          {
+            "type": "text",
+            "text": "作者 Sugar",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://sugar.makersns.com",
+                  "target": "_blank",
+                  "rel": "noopener noreferrer"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "translations": {
+    "zh-TW": {
+      "title": "Focus · 專注計時",
+      "summary": "留一點時間，只做好一件事。Sugar 的開源專注應用提供桌面懸浮計時、macOS 選單列動態時間與 Android 主畫面小工具，共用 Rust 計時狀態，紀錄留在本機。",
+      "description": "Focus 是 Sugar 製作的桌面與 Android 專注應用。暖色單欄介面讓標題列融入頁面，將模式、可選的小目標、大計時圓環與主要操作放在中心。專注、短休息、長休息預設 25 / 5 / 15 分鐘，也可自訂 1–180 分鐘；下一輪始終由你主動開始。\n\nmacOS、Windows 與 Linux 提供可拖曳、可置頂的懸浮計時視窗；macOS 選單列直接顯示剩餘時間，並提供快捷控制面板。這些是應用程式的懸浮視窗，macOS 版不是 Apple WidgetKit 系統小工具。Android 7+ arm64 則提供真正的主畫面 AppWidget，可以直接開始、暫停或繼續。同一裝置上的介面、元件與選單列共用同一個 Rust 計時狀態。\n\n桌面端主動結束會暫停並儲存，意外終止後從最後檢查點以暫停狀態恢復。Android 在同次開機內遭系統回收後，可核對開機與經過時間資訊並繼續目前計時；裝置重新開機或恢復資訊無法核實時暫停。\n\n完整完成與提前結束的專注時間分開記錄，休息不計入專注。資料留在本機，不需帳號，沒有廣告或分析追蹤。提供簡體中文、繁體中文、English、日本語、한국어，以及淺色、深色與跟隨系統外觀；完成提醒可自行開啟。Sugar 的原創應用程式圖示及 MIT 開源程式碼都收錄於 makersns/focus-timer。",
+      "tags": [
+        "專注計時",
+        "番茄鐘",
+        "懸浮計時",
+        "選單列計時",
+        "Android小工具",
+        "本機資料",
+        "五種語言",
+        "開源"
+      ],
+      "platforms": [
+        "macOS",
+        "Windows",
+        "Linux",
+        "Android 7+ · arm64"
+      ],
+      "highlights": [
+        "暖色單欄主畫面與融合標題列：大計時圓環、可選目標，以及清楚的開始、暫停、繼續操作。",
+        "專注、短休息、長休息，預設 25 / 5 / 15 分鐘；可自訂 1–180 分鐘，不自動開始下一輪。",
+        "macOS、Windows、Linux 提供可拖曳、可置頂的懸浮計時視窗；macOS 版不是 WidgetKit 系統小工具。",
+        "macOS 選單列直接顯示剩餘時間，快捷面板可控制計時、顯示小工具或開啟主視窗。",
+        "Android 7+ arm64 原生 AppWidget，可在主畫面開始、暫停或繼續，與應用程式共用 Rust 計時源。",
+        "桌面結束後暫停恢復；Android 同次開機內可恢復執行中的計時，重新開機或資訊無法核實時暫停。",
+        "完整完成與提前結束分開記錄；本機保留最近 500 筆紀錄及最多 366 個日期的彙總，不需帳號。",
+        "五種語言，淺色、深色與跟隨系統；選擇性完成提醒、原創圖示與 MIT 開源，作者 Sugar。"
+      ],
+      "seoTitle": "Focus 專注計時｜桌面懸浮、macOS 選單列與 Android 小工具",
+      "seoDescription": "Sugar 的開源專注應用，支援 macOS、Windows、Linux 與 Android 7+ arm64。暖色單欄介面、融合標題列、可置頂懸浮計時、macOS 選單列動態時間與原生 Android AppWidget。共用 Rust 計時源、本機真實紀錄、五種語言及淺深外觀，MIT 授權。",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "留一點時間，只做好一件事。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "寫作、閱讀，或手邊的一項工作，先選一件想完成的事。Focus 的暖色單欄介面把模式、可選的小目標、大計時圓環與主要操作放在一起。標題列與頁面保持相同表面，macOS 保留真正的系統視窗按鈕；統計與設定需要時再開啟。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "讓節奏由你決定"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "專注、短休息、長休息預設分別為 25、5、15 分鐘，也能為這一輪自訂 1–180 分鐘。"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "隨時暫停或繼續。時間到了，再自行決定休息或開始下一輪，應用程式不會自動接著執行。"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "目標可以留空。時長、外觀與語言各有清楚入口，主畫面始終圍繞目前這一輪。"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "不開啟主視窗，也看得到時間"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "macOS、Windows 與 Linux 的懸浮計時視窗可拖曳、可置頂，顯示模式、剩餘時間、目標與進度，並可直接開始、暫停或繼續。開啟主視窗與隱藏小視窗各有獨立按鈕；隱藏只改變可見狀態，不會停止或暫停計時。它們是應用程式的懸浮視窗，macOS 版不是 Apple WidgetKit 系統小工具。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "macOS 選單列直接更新剩餘時間，展開面板即可控制計時、顯示懸浮元件、開啟主視窗或結束應用程式。Windows 提供系統匣控制；Linux 系統匣是否可用取決於桌面環境。計時更新不會突然把視窗帶到其他應用程式前面。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Android 主畫面上的原生小工具"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Android 7+ arm64 使用真正的系統 AppWidget。將 Focus 加入主畫面，即可查看倒數、目前目標與進度，直接開始、暫停或繼續；點選內容可返回應用程式。小工具的位置、尺寸與移除交由手機主畫面管理，不放入桌面版的置頂與關閉按鈕。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "支援直接新增的啟動器會要求確認；不支援時可長按主畫面空白處，在「小工具」中找到 Focus。需要準確計時權限的系統版本會提供清楚的設定入口。Android 執行中的系統常駐計時通知，與選擇性完成提醒分別處理。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "同一裝置，共用一個計時源"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "主畫面、懸浮視窗、選單列與該平台支援的系統元件，都讀取同一個本機 Rust 計時狀態，不會各自另外啟動計時器。Android 小工具由系統 Chronometer 顯示秒數，原生服務與到期鬧鐘處理背景執行及本輪結束，重新開啟應用程式仍是同一輪。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "依平台恢復，保留你的進度"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "桌面端主動結束會暫停並立即儲存。執行中最長每 30 秒儲存一次檢查點；意外終止後，以暫停狀態恢復最後儲存的剩餘時間。意外終止可能遺失最後檢查點之後的進度。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Android 在裝置未重新開機、開機與經過時間資訊可核實時，能在程序遭系統回收後恢復目前執行中的計時。裝置重新開機或恢復資訊無法核實時，則以暫停狀態恢復。延後喚醒最多結算目前這一輪，不會增加尚未主動開始的後續輪次。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "記錄真正投入的時間"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "完整完成一輪專注才增加完成次數。提前結束會儲存已投入的專注時間，並清楚區分；休息不會加入專注總時長。最近 500 筆紀錄與最多 366 個日期的每日彙總保存在本機。清除歷史與彙總時，目前的計時繼續運作。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "安靜，也能適合你"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "簡體中文、繁體中文、English、日本語、한국어可隨時切換，外觀支援淺色、深色與跟隨系統。計時和紀錄留在本機，不需帳號，沒有廣告或分析追蹤。完成提醒預設關閉，僅在你開啟時要求權限；下一輪由你決定，結束時也不會搶走其他應用程式的焦點。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "從小實驗，到獨立應用"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Focus 從 Sugar 個人網站上的計時實驗發展而來，現在同時面向桌面與 Android。使用 Tauri 2、Rust、React 和 TypeScript，搭配原創應用程式圖示；介面符號來自 Lucide，原始碼以 MIT 授權公開於 makersns/focus-timer。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "下載與一起完善"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "目標平台包含 macOS、Windows、Linux 與 Android 7+ arm64。請到 GitHub Releases 查看目前實際提供的安裝檔、版本說明與 SHA-256 校驗值，選擇符合系統和架構的檔案。如果 Focus 適合你的日常，歡迎給一個 Star，讓更多人找到它；也歡迎問題回報、建議與翻譯改進。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "下載應用程式",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/releases/latest",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "查看原始碼",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "回報問題",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/issues",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "MIT 授權",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/blob/main/LICENSE",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "作者 Sugar",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://sugar.makersns.com",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "en": {
+      "title": "Focus by Sugar",
+      "summary": "An open-source focus timer for desktop and Android, with a floating mini timer, live macOS menu-bar time, and a native Android home-screen widget.",
+      "description": "Focus is an independent desktop and Android focus timer by Sugar. A warm, centered single-column layout blends the title bar into the page and brings together the mode, an optional intention, a large progress ring, and one clear action. Focus, short breaks, and long breaks default to 25 / 5 / 15 minutes, with custom rounds from 1 to 180 minutes. You decide when the next round begins.\n\nmacOS, Windows, and Linux offer draggable, pinnable mini timers. macOS also shows live remaining time directly in the menu bar, with a compact control panel. Desktop mini timers are floating application windows; the macOS version is not an Apple WidgetKit system widget. Android 7+ arm64 provides a native home-screen AppWidget with start, pause, and resume controls. On each device, the interface and available widgets share one authoritative Rust timer.\n\nQuitting on desktop pauses and saves; unexpected desktop stops restore the last checkpoint as paused. Android can recover an active round after process reclamation during the same device boot when its saved boot and elapsed-time information can be verified. A device reboot or unverifiable recovery restores a paused round.\n\nCompleted sessions and early-ended focus time are recorded separately, and breaks never add focus minutes. Records stay locally, with no account, ads, or analytics. Five interface languages, light/dark/system appearance, optional completion alerts, and an original app icon make Focus your own. Its source is maintained at makersns/focus-timer under the MIT license.",
+      "tags": [
+        "Focus timer",
+        "Pomodoro",
+        "Desktop mini timer",
+        "Android widget",
+        "macOS menu bar",
+        "Local data",
+        "Five languages",
+        "Open source"
+      ],
+      "platforms": [
+        "macOS",
+        "Windows",
+        "Linux",
+        "Android 7+ · arm64"
+      ],
+      "highlights": [
+        "A warm single-column screen with an integrated title bar, a large progress ring, an optional intention, and one clear action.",
+        "Focus, short breaks, and long breaks; 25 / 5 / 15-minute defaults, 1–180-minute custom rounds, and no automatic next round.",
+        "Draggable, pinnable mini timers for macOS, Windows, and Linux: app windows, not Apple WidgetKit system widgets.",
+        "Live remaining time in the macOS menu bar, with a panel to control timing, show the mini timer, or open the main window.",
+        "A native AppWidget for Android 7+ arm64: start, pause, or resume from the home screen using the same Rust timer as the app.",
+        "Desktop quit restores paused. Android can resume after same-boot process reclamation; device reboot or unverifiable recovery restores paused.",
+        "Honest local records distinguish completion from early endings; keep 500 recent sessions and totals for up to 366 dates.",
+        "Five languages; light, dark, or system appearance. Optional completion alerts, an original icon by Sugar, and MIT-licensed source."
+      ],
+      "seoTitle": "Focus by Sugar | Desktop Mini Timer & Android Home-Screen Widget",
+      "seoDescription": "Focus by Sugar for macOS, Windows, Linux, and Android 7+ arm64. A calm single-column timer, floating desktop mini timers, live macOS menu-bar controls, and a native Android AppWidget. One local Rust timer, honest records, five languages, light/dark themes. MIT open source.",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Make room for one thing."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A piece of writing, a chapter to read, or the next small task: choose one thing, add an intention if it helps, and begin. Focus centers the mode, intention, progress ring, and main action in one warm column. The title bar shares the same surface, macOS keeps its real window controls, and statistics and settings are there when you need them."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "A rhythm you choose"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Focus, short breaks, and long breaks default to 25, 5, and 15 minutes. Choose a custom duration from 1 to 180 minutes for any round."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Pause or continue whenever you need. When time is up, choose a break or another session yourself; nothing starts automatically."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "An intention is optional. Duration, appearance, and language have clear controls while the main screen stays centered on the current round."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "See the time without opening the main window"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "On macOS, Windows, and Linux, a draggable mini timer can stay above other windows. It shows the mode, remaining time, intention, and progress, with direct start, pause, and resume controls. Open the main window or hide the mini timer separately: hiding never pauses or ends the round. These are floating application windows; the macOS mini timer is not an Apple WidgetKit system widget."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The macOS menu bar displays live remaining time. Open its compact panel to control the timer, show the mini timer, reopen the main window, or quit. Windows offers system-tray controls; Linux tray availability depends on the desktop environment. Timer updates never bring a window in front of another app."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "A native Android home-screen widget"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Android 7+ arm64 uses a real system AppWidget. Add Focus to your home screen to see the countdown, intention, and progress, then start, pause, or resume directly. Tap its content to open the app. Your launcher manages placement, resizing, and removal, so the widget does not borrow desktop pin and close buttons."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Compatible launchers ask you to confirm an add request. Otherwise, long-press an empty home-screen area and find Focus in Widgets. Android versions that require precise-timing access provide a clear system-settings action. The system's ongoing running-timer notification is separate from optional completion alerts."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "One timer on each device"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The main interface, mini timer, menu-bar panel, and supported system widget read the same local Rust timer state. They do not start independent clocks. On Android, the system Chronometer displays seconds while native service and alarm facilities handle background operation and the current round's completion. Opening the app again shows the same round."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Recovery that fits the platform"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Quitting on desktop pauses and saves immediately. Running checkpoints are saved at most 30 seconds apart. After an unexpected desktop stop, the last saved remainder returns as paused, ready when you are. Progress since the last checkpoint may be lost."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "On Android, an active timer can recover after system process reclamation during the same device boot when the saved boot and elapsed-time information is valid. Device reboot or unverifiable recovery restores it paused. A delayed wake-up settles at most the current round; it never invents later sessions you did not start."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "A record of time actually spent"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Only a fully completed focus round increases the completed count. Ending early saves the focus time already spent and labels it separately. Breaks never add focus minutes. The latest 500 session records and daily totals for up to 366 dates stay on your device. Clearing history and totals leaves a running timer in progress."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Quiet, and made to feel right"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Choose Simplified Chinese, Traditional Chinese, English, Japanese, or Korean, with light, dark, or system appearance. Timing and records stay locally, without an account, ads, or analytics. Completion alerts are off by default, with permission requested when you enable them. You choose the next round, and completion never steals another app's focus."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "From a small experiment to an independent app"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Focus began as a timer experiment on Sugar's portfolio and now supports desktop and Android. It is built with Tauri 2, Rust, React, and TypeScript, with an original app icon. Interface symbols use Lucide, and the source is published at makersns/focus-timer under the MIT license."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Download and take part"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Target platforms are macOS, Windows, Linux, and Android 7+ arm64. Visit GitHub Releases for the installers currently available, release notes, and SHA-256 checksums, then choose the file for your system and architecture. If Focus earns a place in your day, a star helps other people find it. Bug reports, suggestions, and translation improvements are welcome."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Download",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/releases/latest",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "Source code",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "Report an issue",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/issues",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "MIT license",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/blob/main/LICENSE",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "About Sugar",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://sugar.makersns.com",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "ja": {
+      "title": "Focus · 集中タイマー",
+      "summary": "ひとつのことに、少しの時間を。Sugar のオープンソース集中タイマー。デスクトップのミニタイマー、macOS メニューバーの残り時間、Android のホーム画面ウィジェットで、同じ計時を手元に。",
+      "description": "Focus は Sugar が制作する、デスクトップと Android 向けの集中タイマーです。暖かな色の1カラム画面にタイトルバーをなじませ、モード、任意の目標、大きな進捗リング、次の操作を中央にまとめています。集中・短い休憩・長い休憩の標準は 25 / 5 / 15 分。1〜180 分に変更でき、次の開始はいつも自分で選べます。\n\nmacOS・Windows・Linux では、移動と最前面表示に対応するミニタイマーを使えます。macOS のメニューバーには残り時間が直接表示され、操作パネルも開けます。ミニタイマーはアプリのフローティングウィンドウで、macOS 版は Apple WidgetKit のシステムウィジェットではありません。Android 7+ arm64 はネイティブのホーム画面 AppWidget に対応し、開始・一時停止・再開を直接操作できます。同一端末の画面とウィジェットはひとつの Rust タイマーを共有します。\n\nデスクトップの終了時は一時停止して保存し、予期しない終了後は最後のチェックポイントから一時停止で復元します。Android では端末を再起動していなければ、起動情報と経過時間を確認して、回収されたプロセスの実行中タイマーを復元できます。端末の再起動後や情報を確認できない場合は一時停止します。\n\n完了したセッションと途中終了した集中時間は別々に記録し、休憩を集中時間に加えません。記録は端末内に保存され、アカウント、広告、アクセス解析はありません。5言語、ライト・ダーク・システム設定、任意の完了通知、オリジナルのアプリアイコンを備え、makersns/focus-timer で MIT ライセンスのソースを公開しています。",
+      "tags": [
+        "集中タイマー",
+        "ポモドーロ",
+        "ミニタイマー",
+        "メニューバー",
+        "Androidウィジェット",
+        "ローカル保存",
+        "5言語対応",
+        "オープンソース"
+      ],
+      "platforms": [
+        "macOS",
+        "Windows",
+        "Linux",
+        "Android 7+ · arm64"
+      ],
+      "highlights": [
+        "タイトルバーがなじむ暖かな1カラム画面。大きな進捗リング、任意の目標、わかりやすい主要操作。",
+        "集中・短い休憩・長い休憩。標準 25 / 5 / 15 分、1〜180 分に変更でき、次の回は自動開始しません。",
+        "macOS・Windows・Linux の移動・最前面表示に対応するミニタイマー。macOS 版は WidgetKit ではなくアプリの小窓です。",
+        "macOS メニューバーに残り時間を表示。パネルから計時、ミニタイマー、メイン画面を操作できます。",
+        "Android 7+ arm64 のネイティブ AppWidget。アプリと同じ Rust タイマーで、ホーム画面から開始・一時停止・再開。",
+        "デスクトップ終了後は一時停止で復元。Android は同じ起動中のプロセス回収から復元でき、再起動後や情報未確認時は一時停止。",
+        "完了と途中終了を分けて端末内に保存。直近 500 件の記録と、最大 366 日付分の日別合計に対応。",
+        "5言語、ライト・ダーク・システム設定、任意の完了通知。Sugar のオリジナルアイコンと MIT オープンソース。"
+      ],
+      "seoTitle": "Focus by Sugar｜ミニタイマー・macOS メニューバー・Android ウィジェット",
+      "seoDescription": "macOS・Windows・Linux・Android 7+ arm64 向けのオープンソース集中タイマー。暖かな1カラム画面、デスクトップの小窓、macOS メニューバーの残り時間、ネイティブ Android AppWidget。同一端末の Rust タイマー、ローカル記録、5言語とライト・ダークテーマ。作者 Sugar、MIT ライセンス。",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "ひとつのことに、少しの時間を。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "文章を書く、本を読む、目の前の仕事をひとつ進める。取り組みたいことを決め、必要なら目標を書いて始めます。Focus はモード、目標、大きな進捗リング、主要操作を暖かな1カラムにまとめています。タイトルバーは画面になじみ、macOS のシステムウィンドウボタンはそのまま。統計と設定は必要なときに開けます。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "自分のペースで"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "集中・短い休憩・長い休憩の標準は 25、5、15 分。各回の時間を 1〜180 分で設定できます。"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "必要なときに一時停止し、準備ができたら再開。終了後に休むか、次の集中を始めるかも自分で決め、自動では進みません。"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "目標の入力は任意です。時間・外観・言語はわかりやすい操作で選び、主画面は現在のタイマーに集中させます。"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "主画面を開かず、残り時間を確認"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "macOS・Windows・Linux のミニタイマーは移動と最前面表示に対応し、モード、残り時間、目標、進捗を表示します。開始・一時停止・再開もその場で操作できます。主画面を開く操作とミニタイマーを隠す操作は独立し、隠しても計時は止まりません。これはアプリのフローティングウィンドウであり、macOS 版は Apple WidgetKit のシステムウィジェットではありません。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "macOS のメニューバーには残り時間が直接表示されます。パネルからタイマー操作、ミニタイマーの表示、主画面の表示、終了を選べます。Windows はシステムトレイの操作に対応し、Linux のトレイはデスクトップ環境によって利用可否が変わります。毎秒の更新で、ほかのアプリより前にウィンドウを出すことはありません。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Android のネイティブなホーム画面ウィジェット"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Android 7+ arm64 では実際のシステム AppWidget を使用します。ホーム画面に Focus を追加し、残り時間、目標、進捗を確認しながら開始・一時停止・再開できます。内容をタップするとアプリが開きます。移動、サイズ変更、削除はランチャーが管理するため、デスクトップ用の最前面固定や閉じるボタンは置きません。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "対応するランチャーでは追加の確認画面が出ます。対応していない場合はホーム画面の空き領域を長押しし、「ウィジェット」から Focus を選んでください。正確な計測の許可が必要な Android では設定への入口を示します。実行中のシステム常駐通知と、任意の完了通知は別に扱います。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "同じ端末では、ひとつのタイマー"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "主画面、ミニタイマー、メニューバーパネル、対応するシステムウィジェットは、同じ端末の Rust 計時状態を読み取ります。画面ごとに別の時計を始めることはありません。Android はシステムの Chronometer で秒を表示し、ネイティブサービスと終了時刻のアラームがバックグラウンド動作を支えます。アプリを開き直しても同じ回が表示されます。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "プラットフォームに合った復元"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "デスクトップでアプリを終了すると、その場で一時停止して保存します。動作中のチェックポイントは最長 30 秒間隔で保存します。予期しない終了後は、最後に保存した残り時間を一時停止で復元します。最後のチェックポイント以降の進行が失われる場合があります。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Android は端末を再起動しておらず、保存した起動情報と経過時間を確認できる場合、OS にプロセスを回収されても現在の実行中タイマーを復元できます。端末の再起動後や情報を確認できない場合は一時停止します。遅れて処理が再開しても完了させるのは現在の1回までで、開始していない後続の回を記録しません。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "取り組んだ時間を、そのまま記録"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "集中を最後まで終えたときだけ完了数が増えます。途中で終了した場合も、それまでの集中時間を区別して保存します。休憩は集中時間に加算しません。直近 500 件の記録と最大 366 日付分の日別合計を端末に保存し、記録を消去しても実行中のタイマーは止まりません。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "静かに、自分らしく使える設計"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "簡体字中国語・繁体字中国語・英語・日本語・韓国語を切り替え、ライト・ダーク・システム設定を選べます。計時と記録は端末内に保存し、アカウント、広告、アクセス解析はありません。完了通知は初期設定でオフで、有効にするときに許可を求めます。次の開始は自分で選び、完了時にほかのアプリのフォーカスを奪うこともありません。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "小さな実験から、独立したアプリへ"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Focus は Sugar のポートフォリオ上のタイマー実験から生まれ、デスクトップと Android のアプリになりました。Tauri 2、Rust、React、TypeScript で構築し、オリジナルのアプリアイコンを用意しています。画面のシンボルは Lucide を使用し、ソースは makersns/focus-timer で MIT ライセンスのもとに公開しています。"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "ダウンロードと参加"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "対象は macOS・Windows・Linux・Android 7+ arm64 です。GitHub Releases で現在提供しているインストーラー、リリースノート、SHA-256 チェックサムを確認し、システムとアーキテクチャに合うファイルを選んでください。日常に役立ったら、Star で応援していただけるとうれしいです。不具合の報告、提案、翻訳の改善も歓迎します。"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "ダウンロード",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/releases/latest",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "ソースコード",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "問題を報告",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/issues",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "MIT ライセンス",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/blob/main/LICENSE",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "作者 Sugar のサイト",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://sugar.makersns.com",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "ko": {
+      "title": "Focus · 집중 타이머",
+      "summary": "Sugar의 오픈 소스 집중 타이머. 데스크톱 미니 타이머, macOS 메뉴 막대의 남은 시간, Android 홈 화면 위젯을 같은 Rust 타이머로 연결하고 기록은 기기에 보관합니다.",
+      "description": "Focus는 Sugar가 만드는 데스크톱과 Android용 집중 타이머입니다. 제목 표시줄이 자연스럽게 이어지는 따뜻한 한 열 화면에 모드, 선택 목표, 큰 진행 링과 주요 동작을 배치했습니다. 집중·짧은 휴식·긴 휴식은 기본 25 / 5 / 15분이며 1–180분으로 바꿀 수 있습니다. 다음 세션의 시작은 직접 선택합니다.\n\nmacOS, Windows, Linux에서 이동 및 항상 위에 표시를 지원하는 미니 타이머를 제공합니다. macOS 메뉴 막대에는 남은 시간이 바로 표시되고 작은 제어 패널을 열 수 있습니다. 데스크톱 미니 타이머는 앱의 플로팅 창이며 macOS 버전은 Apple WidgetKit 시스템 위젯이 아닙니다. Android 7+ arm64는 실제 홈 화면 AppWidget으로 시작·일시 정지·계속하기를 지원합니다. 같은 기기의 화면과 위젯은 하나의 Rust 타이머 상태를 공유합니다.\n\n데스크톱 앱을 종료하면 일시 정지하고 저장하며, 예기치 않은 종료 후에는 마지막 체크포인트를 일시 정지 상태로 복원합니다. Android는 같은 부팅 중 프로세스가 회수되어도 저장된 부팅 및 경과 시간 정보를 확인해 실행 중인 타이머를 복원할 수 있습니다. 기기를 재부팅하거나 복원 정보를 확인할 수 없으면 일시 정지 상태가 됩니다.\n\n완료 세션과 일찍 끝낸 집중 시간을 따로 기록하며 휴식은 집중 시간에 더하지 않습니다. 기록은 기기에 보관하고 계정, 광고, 분석 추적이 없습니다. 5개 언어, 밝게·어둡게·시스템 테마, 선택 가능한 완료 알림과 독창적인 앱 아이콘을 제공하며 makersns/focus-timer에서 MIT 라이선스로 소스를 공개합니다.",
+      "tags": [
+        "집중 타이머",
+        "포모도로",
+        "미니 타이머",
+        "메뉴 막대 타이머",
+        "Android 위젯",
+        "로컬 저장",
+        "5개 언어",
+        "오픈 소스"
+      ],
+      "platforms": [
+        "macOS",
+        "Windows",
+        "Linux",
+        "Android 7+ · arm64"
+      ],
+      "highlights": [
+        "제목 표시줄이 이어지는 따뜻한 한 열 화면에 큰 진행 링, 선택 목표, 명확한 시작·일시 정지·계속 동작을 배치했습니다.",
+        "집중·짧은 휴식·긴 휴식. 기본 25 / 5 / 15분, 1–180분 맞춤 설정, 다음 세션 자동 시작 없음.",
+        "macOS·Windows·Linux에서 이동 및 항상 위에 표시를 지원하는 미니 타이머. macOS 버전은 WidgetKit이 아닌 앱의 플로팅 창입니다.",
+        "macOS 메뉴 막대에서 남은 시간을 보고 패널로 타이머, 미니 타이머 표시 및 메인 창 열기를 조작합니다.",
+        "Android 7+ arm64의 네이티브 AppWidget. 앱과 같은 Rust 타이머로 홈 화면에서 시작·일시 정지·계속하기.",
+        "데스크톱 종료 후에는 일시 정지 복원. Android는 같은 부팅 중 프로세스 회수 후 복원 가능하며 재부팅·정보 확인 불가 시 일시 정지.",
+        "완료와 조기 종료를 나누어 기기에 저장합니다. 최근 500개 기록과 최대 366개 날짜의 합계를 보관하며 계정은 필요 없습니다.",
+        "5개 언어와 밝게·어둡게·시스템 테마, 선택 완료 알림, Sugar의 독창적인 아이콘 및 MIT 오픈 소스."
+      ],
+      "seoTitle": "Focus by Sugar | 데스크톱 미니 타이머와 Android 홈 화면 위젯",
+      "seoDescription": "macOS, Windows, Linux, Android 7+ arm64용 오픈 소스 집중 타이머. 따뜻한 한 열 화면, 데스크톱 플로팅 창, macOS 메뉴 막대의 남은 시간과 네이티브 Android AppWidget을 제공합니다. 같은 기기의 Rust 타이머, 로컬 기록, 5개 언어, 밝고 어두운 테마. Sugar 제작, MIT 라이선스.",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "잠깐의 시간, 한 가지에 집중하세요."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "글쓰기, 독서, 눈앞의 작은 업무처럼 지금 하고 싶은 일 하나를 골라 보세요. Focus는 따뜻한 한 열 화면에 모드, 선택 목표, 큰 진행 링과 주요 동작을 모았습니다. 제목 표시줄은 화면과 자연스럽게 이어지고 macOS의 실제 창 버튼을 유지합니다. 통계와 설정은 필요할 때 열 수 있습니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "나에게 맞는 리듬"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "집중, 짧은 휴식, 긴 휴식의 기본은 25분, 5분, 15분입니다. 각 세션은 1–180분으로 설정할 수 있습니다."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "필요할 때 일시 정지하고 준비되면 계속하세요. 시간이 끝나면 쉴지, 다음 집중을 시작할지 직접 선택하며 자동으로 넘어가지 않습니다."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "목표 입력은 선택 사항입니다. 시간·테마·언어는 명확한 메뉴에서 고르고 메인 화면은 현재 세션에 집중합니다."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "메인 창을 열지 않고도 남은 시간을"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "macOS, Windows, Linux의 미니 타이머는 이동과 항상 위에 표시를 지원하며 모드, 남은 시간, 목표와 진행 상황을 보여 줍니다. 시작·일시 정지·계속하기도 바로 사용할 수 있습니다. 메인 창 열기와 미니 타이머 숨기기는 별도 동작이며, 숨겨도 타이머를 멈추거나 끝내지 않습니다. 데스크톱 미니 타이머는 앱의 플로팅 창으로, macOS 버전은 Apple WidgetKit 시스템 위젯이 아닙니다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "macOS 메뉴 막대는 남은 시간을 바로 표시합니다. 패널에서 타이머 제어, 미니 타이머 표시, 메인 창 열기와 종료를 선택할 수 있습니다. Windows는 시스템 트레이 제어를 제공하고 Linux 트레이는 데스크톱 환경에 따라 지원됩니다. 매초 업데이트가 창을 다른 앱 앞으로 가져오지 않습니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Android의 실제 홈 화면 위젯"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Android 7+ arm64는 네이티브 시스템 AppWidget을 사용합니다. Focus를 홈 화면에 추가하면 카운트다운, 목표와 진행 상황을 확인하고 바로 시작·일시 정지·계속할 수 있습니다. 내용을 누르면 앱을 엽니다. 이동, 크기 조정과 삭제는 런처가 관리하므로 데스크톱의 항상 위에 표시·닫기 버튼을 넣지 않습니다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "지원하는 런처는 위젯 추가 확인을 요청합니다. 지원하지 않으면 홈 화면의 빈 곳을 길게 눌러 '위젯'에서 Focus를 찾으면 됩니다. 정확한 타이머 권한이 필요한 Android에서는 시스템 설정으로 가는 명확한 버튼을 제공합니다. 실행 중인 타이머의 시스템 상시 알림과 선택 가능한 완료 알림은 별도로 처리합니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "같은 기기에서는 하나의 타이머"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "메인 화면, 미니 타이머, 메뉴 막대 패널과 지원되는 시스템 위젯은 같은 기기의 Rust 타이머 상태를 읽습니다. 화면마다 독립된 시계를 시작하지 않습니다. Android에서는 시스템 Chronometer가 초를 표시하고 네이티브 서비스와 종료 알람이 백그라운드 동작 및 현재 세션 완료를 처리합니다. 앱을 다시 열어도 같은 세션을 봅니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "플랫폼에 맞게 진행 상황 복원"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "데스크톱에서 앱을 종료하면 즉시 일시 정지하고 저장합니다. 실행 중에는 최대 30초 간격으로 체크포인트를 저장합니다. 예기치 않게 종료되면 마지막으로 저장한 남은 시간을 일시 정지 상태로 복원하며 마지막 체크포인트 이후의 진행은 사라질 수 있습니다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Android는 기기를 재부팅하지 않았고 저장된 부팅·경과 시간 정보를 확인할 수 있으면 시스템이 프로세스를 회수한 뒤에도 현재 실행 중인 타이머를 복원할 수 있습니다. 기기를 재부팅하거나 정보를 확인할 수 없으면 일시 정지 상태로 복원합니다. 처리가 늦게 재개되어도 현재 세션까지만 완료하며 시작하지 않은 다음 세션을 만들어 기록하지 않습니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "실제로 집중한 시간을 기록"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "집중 세션을 끝까지 마쳐야 완료 횟수가 늘어납니다. 일찍 끝내도 그동안 집중한 시간을 따로 표시해 저장하고 휴식은 집중 시간에 더하지 않습니다. 최근 500개 기록과 최대 366개 날짜의 일별 합계를 기기에 보관합니다. 기록과 합계를 지워도 실행 중인 타이머는 계속됩니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "조용하게, 나에게 맞게"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "간체 중국어, 번체 중국어, 영어, 일본어, 한국어를 전환하고 밝게·어둡게·시스템 테마를 선택할 수 있습니다. 타이머와 기록은 기기에 저장하며 계정, 광고, 분석 추적이 없습니다. 완료 알림은 기본으로 꺼져 있고 켤 때 권한을 요청합니다. 다음 세션은 직접 시작하며 완료가 다른 앱의 포커스를 빼앗지 않습니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "작은 실험에서 독립 앱으로"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Focus는 Sugar의 포트폴리오에 있던 타이머 실험에서 시작해 데스크톱과 Android용 앱으로 발전했습니다. Tauri 2, Rust, React, TypeScript로 만들고 독창적인 앱 아이콘을 갖췄습니다. 화면의 기호에는 Lucide를 사용하며 소스는 makersns/focus-timer에서 MIT 라이선스로 공개합니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "다운로드와 참여"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "대상 플랫폼은 macOS, Windows, Linux와 Android 7+ arm64입니다. GitHub Releases에서 현재 제공되는 설치 파일, 릴리스 노트, SHA-256 체크섬을 확인하고 시스템과 아키텍처에 맞는 파일을 고르세요. 일상에 도움이 된다면 Star로 다른 사람에게도 알려 주세요. 문제 제보, 제안과 번역 개선도 환영합니다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "다운로드",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/releases/latest",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "소스 코드",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "문제 제보",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/issues",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "MIT 라이선스",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/makersns/focus-timer/blob/main/LICENSE",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " · "
+              },
+              {
+                "type": "text",
+                "text": "개발자 Sugar 홈페이지",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://sugar.makersns.com",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

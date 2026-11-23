@@ -1,0 +1,16 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "mini-drag",
+  "description": "Local desktop Focus window controls, scoped to the intended surface.",
+  "platforms": [
+    "macOS",
+    "windows",
+    "linux"
+  ],
+  "windows": [
+    "mini"
+  ],
+  "permissions": [
+    "core:window:allow-start-dragging"
+  ]
+}

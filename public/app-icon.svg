@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
+  <defs>
+    <linearGradient id="paper" x1="128" y1="40" x2="900" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF9EB"/><stop offset="1" stop-color="#EDE8D9"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="340" y1="260" x2="700" y2="810" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EDAD83"/><stop offset="1" stop-color="#D58560"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="960" height="960" rx="224" fill="url(#paper)"/>
+  <rect x="38" y="38" width="948" height="948" rx="218" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="12"/>
+  <path d="M649 239A298 298 0 1 0 810 531" stroke="#AF764D" stroke-opacity=".10" stroke-width="114" stroke-linecap="round" transform="translate(0 14)"/>
+  <path d="M649 239A298 298 0 1 0 810 531" stroke="url(#sun)" stroke-width="108" stroke-linecap="round"/>
+  <path d="M512 355v298" stroke="url(#sun)" stroke-width="108" stroke-linecap="round"/>
+  <circle cx="762" cy="257" r="70" fill="#8B9E7D"/>
+  <circle cx="744" cy="238" r="20" fill="#B8C6A4" fill-opacity=".55"/>
+</svg>

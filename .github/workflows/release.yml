@@ -1,0 +1,121 @@
+name: Release desktop clients
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  package:
+    needs: checks
+    name: Package ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            platform: macos-universal
+            target: universal-apple-darwin
+            bundles: app,dmg
+          - os: windows-2022
+            platform: windows-x64
+            target: x86_64-pc-windows-msvc
+            bundles: nsis
+          - os: ubuntu-22.04
+            platform: linux-x64
+            target: x86_64-unknown-linux-gnu
+            bundles: appimage,deb,rpm
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Confirm one release version
+        shell: bash
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const p=JSON.parse(fs.readFileSync('package.json')); const t=JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json')); const c=fs.readFileSync('src-tauri/Cargo.toml','utf8').match(/^version = \"([^\"]+)\"/m)?.[1]; if(p.version!==t.version || c!==t.version) throw Error('Version mismatch'); if(process.env.GITHUB_REF_TYPE==='tag' && process.env.GITHUB_REF_NAME!=='v'+t.version) throw Error('Tag mismatch');"
+      - name: Install Linux desktop dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - name: Install Rust 1.95
+        run: |
+          rustup toolchain install 1.95.0 --profile minimal --component rustfmt
+          rustup default 1.95.0
+      - name: Install universal macOS targets
+        if: runner.os == 'macOS'
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - name: Install locked JavaScript dependencies
+        run: npm ci
+      - name: Build installers from the locked source
+        run: node scripts/build-native.mjs --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
+      - name: Verify both macOS architectures and ad hoc signature
+        if: runner.os == 'macOS'
+        run: |
+          lipo src-tauri/target/universal-apple-darwin/release/bundle/macos/Focus.app/Contents/MacOS/focus-timer -verify_arch arm64 x86_64
+          codesign --verify --deep --strict src-tauri/target/universal-apple-darwin/release/bundle/macos/Focus.app
+      - name: Collect installers and SHA-256 manifest
+        run: node scripts/release-assets.mjs --platform ${{ matrix.platform }} --target ${{ matrix.target }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: focus-${{ matrix.platform }}
+          path: release-assets/${{ matrix.platform }}/*
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
+  draft:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: focus-*
+          merge-multiple: true
+          path: release-assets
+      - name: Verify all platform artifacts and source commits
+        run: node scripts/release-verify.mjs release-assets
+      - name: Create or update a reviewable draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          if gh release view "$RELEASE_TAG" --json isDraft > release-state.json; then
+            node -e "if (!require('./release-state.json').isDraft) throw Error('Refusing to replace a published release')"
+          else
+            gh release create "$RELEASE_TAG" --verify-tag --draft --title "Focus $RELEASE_TAG" --notes-file "docs/releases/$RELEASE_TAG.md"
+          fi
+          gh release upload "$RELEASE_TAG" release-assets/Focus_* release-assets/SHA256SUMS.txt --clobber

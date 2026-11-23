@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  check:
+    name: Test on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-2022, macos-15-intel, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install Linux desktop dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - name: Install Rust 1.95
+        run: |
+          rustup toolchain install 1.95.0 --profile minimal --component rustfmt --component clippy
+          rustup default 1.95.0
+      - name: Install locked JavaScript dependencies
+        run: npm ci
+      - name: Test timer preview and frontend
+        run: npm test
+      - name: Typecheck and build frontend
+        run: npm run build
+      - name: Check Rust formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+      - name: Test native timer, state recovery, and allowlists
+        run: cargo test --manifest-path src-tauri/Cargo.toml --locked --lib
+      - name: Check native integration
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --locked --all-targets -- -D warnings
+
+      - name: Install native Windows WebDriver
+        if: runner.os == 'Windows'
+        run: cargo install tauri-driver --version 2.1.0 --locked
+      - name: Match the installed WebView2 runtime
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/setup-webdriver-windows.ps1
+      - name: Build the native Windows application for UI tests
+        if: runner.os == 'Windows'
+        run: node scripts/build-native.mjs --debug --no-bundle --skip-tests
+      - name: Test real Windows windows and shared timer
+        if: runner.os == 'Windows'
+        run: node scripts/test-native-windows.mjs
+      - name: Preserve native Windows UI evidence
+        if: always() && runner.os == 'Windows'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-native-evidence
+          path: native-evidence/windows/
+          if-no-files-found: warn
+          retention-days: 14
+
+  android:
+    name: Build and test Android ARM64
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Install Linux dependencies for shared Rust tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - name: Install the frozen Android SDK and NDK
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, subprocess
+          sdk = pathlib.Path(os.environ["ANDROID_HOME"])
+          manager = sdk / "cmdline-tools/latest/bin/sdkmanager"
+          subprocess.run([str(manager), "--licenses"], input="y\n" * 100, text=True, stdout=subprocess.DEVNULL, check=True)
+          subprocess.run([str(manager), "platform-tools", "platforms;android-36", "build-tools;36.1.0", "ndk;29.0.14206865"], check=True)
+          with open(os.environ["GITHUB_ENV"], "a") as output:
+              output.write("NDK_HOME=" + str(sdk / "ndk/29.0.14206865") + "\n")
+              output.write("ANDROID_NDK_HOME=" + str(sdk / "ndk/29.0.14206865") + "\n")
+              output.write("GRADLE_USER_HOME=" + str(pathlib.Path(os.environ["RUNNER_TEMP"]) / "focus-gradle") + "\n")
+          PY
+      - name: Install Rust 1.95 and Android target
+        run: |
+          rustup toolchain install 1.95.0 --profile minimal --component rustfmt
+          rustup default 1.95.0
+          rustup target add aarch64-linux-android
+      - name: Install locked JavaScript dependencies
+        run: npm ci
+      - name: Compile Android app and test shared timer and widgets
+        run: node scripts/android-build.mjs --debug --test
+      - name: Preserve Android test reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-test-evidence
+          path: |
+            native-evidence/android/
+            src-tauri/gen/android/app/build/reports/tests/
+          if-no-files-found: warn
+          retention-days: 14
+      # Debug APKs are test-only. The publisher adds the verified, private-key
+      # signed ARM64 release from this same commit to the reviewed draft.

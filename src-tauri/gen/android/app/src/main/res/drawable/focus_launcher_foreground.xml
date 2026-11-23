@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Geometry from public/brand-mark.svg; inset for Android adaptive icon masks. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="128" android:viewportHeight="128">
+    <group android:pivotX="64" android:pivotY="64" android:scaleX="0.70" android:scaleY="0.70">
+        <path android:pathData="M84,23 A46,46 0,1 0,106 67" android:strokeColor="#D8875F"
+            android:strokeWidth="17" android:strokeLineCap="round" android:fillColor="#00000000" />
+        <path android:pathData="M64,40 L64,86" android:strokeColor="#D8875F"
+            android:strokeWidth="17" android:strokeLineCap="round" android:fillColor="#00000000" />
+        <path android:pathData="M113,27 A11,11 0,1 1,91 27 A11,11 0,1 1,113 27"
+            android:fillColor="#8B9E7D" />
+    </group>
+</vector>
