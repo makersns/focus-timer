@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.0",
+  "sourceCommit": "6ace789bfe63db7dde3449236d7cdde9ca591d0c",
+  "tag": "v0.1.0",
+  "annotatedTagObject": "f59625c41f2029619fe957c35096292235a3c5af",
+  "release": {
+    "id": 455895660,
+    "url": "https://github.com/makersns/focus-timer/releases/tag/v0.1.0",
+    "publishedAt": "2026-11-23T19:31:05Z",
+    "stable": true,
+    "notesSha256": "cc27930cd688fdf0038cb39ba595b37ce377028b61a25697f3a42854f489616d"
+  },
+  "sourceChecks": {
+    "url": "https://github.com/makersns/focus-timer/actions/runs/45241402661",
+    "sourceCommit": "6ace789bfe63db7dde3449236d7cdde9ca591d0c",
+    "result": "success",
+    "requiredJobs": [
+      "Ubuntu 22.04",
+      "Windows Server 2022",
+      "macOS 15 Apple Silicon",
+      "macOS 15 Intel",
+      "Android ARM64"
+    ]
+  },
+  "tagWorkflowAttempt": {
+    "url": "https://github.com/makersns/focus-timer/actions/runs/45243141787",
+    "result": "cancelled",
+    "reason": "GitHub-hosted macOS ARM runner capacity; the job was not acquired before cancellation. The other four source-check jobs passed; package jobs were skipped.",
+    "substituteSourceChecksRun": 45241402661
+  },
+  "packaging": {
+    "url": "https://github.com/makersns/focus-timer/actions/runs/45247245331",
+    "result": "success",
+    "controllerCommit": "4a745e9ca4390fc7cc22f8f66affdb12ad2a9752",
+    "workflowSha256": "b116eabb44a25560502100b09c3e7d73cee931f64d76463f2aa12c24691357ee",
+    "productCommit": "6ace789bfe63db7dde3449236d7cdde9ca591d0c",
+    "standardNativeTestsEnabled": true
+  },
+  "origins": [
+    {
+      "platform": "macos-universal",
+      "kind": "local-clean-source",
+      "sourceCommit": "6ace789bfe63db7dde3449236d7cdde9ca591d0c",
+      "architectures": [
+        "arm64",
+        "x86_64"
+      ],
+      "signing": "ad-hoc, not Apple-notarized",
+      "executableSha256": "2f5cda04c3e8034e22b1194700aa71736d5b4e93fd9e4ad80f930f52df22d31f",
+      "normalInstalledAppFullscreenCheck": true
+    },
+    {
+      "platform": "windows-x64",
+      "kind": "github-actions",
+      "sourceCommit": "6ace789bfe63db7dde3449236d7cdde9ca591d0c",
+      "runId": 45247245331,
+      "signing": "no publisher certificate"
+    },
+    {
+      "platform": "linux-x64",
+      "kind": "github-actions",
+      "sourceCommit": "6ace789bfe63db7dde3449236d7cdde9ca591d0c",
+      "runId": 45247245331
+    },
+    {
+      "platform": "android-arm64",
+      "kind": "local-clean-source",
+      "sourceCommit": "6ace789bfe63db7dde3449236d7cdde9ca591d0c",
+      "signing": "project release certificate",
+      "certificateSha256": "e79f8d4875a66c7d5a59ac4540735d5c3349044a982f065149f465421ac6837e",
+      "debuggable": false,
+      "zipAlignmentBytes": 16384
+    }
+  ],
+  "verification": {
+    "collectorSha256": "582f3c801ef4f13c55b61c87a67dfbb79b68e46272d72ee65980b5d407706049",
+    "publicationReceiptSha256": "2aa66d34e2fe9e82bdc9450697a9f3c2dbe848bae1ba24f6e6f5ae08f422ea94",
+    "remoteAssetSizeAndDigestVerified": true,
+    "publicApiVerified": true,
+    "publicChecksumsVerified": true
+  },
+  "assets": [
+    {
+      "name": "Focus_0.1.0_android-arm64.apk",
+      "bytes": 7460171,
+      "sha256": "948ba19a67f7c5f36bddbaff21553091e650d610b444fdd78b1510616ca0e784",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_android-arm64.apk"
+    },
+    {
+      "name": "Focus_0.1.0_android-arm64.manifest.json",
+      "bytes": 475,
+      "sha256": "dd060baf710dd152f91ac64dd5beaff69e98ab2338da6467731790d34a61f937",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_android-arm64.manifest.json"
+    },
+    {
+      "name": "Focus_0.1.0_linux-x64.AppImage",
+      "bytes": 81824248,
+      "sha256": "12c1d7f1cc86e59f2fe8e111e33c51e562e90cc0dacc8700235841075e019ba1",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_linux-x64.AppImage"
+    },
+    {
+      "name": "Focus_0.1.0_linux-x64.deb",
+      "bytes": 3230356,
+      "sha256": "f74caa6cc41aeb83cf276db16701e8ce415cd1397a1ef1c229596da8f63c3508",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_linux-x64.deb"
+    },
+    {
+      "name": "Focus_0.1.0_linux-x64.manifest.json",
+      "bytes": 667,
+      "sha256": "62f16859bd4433d08a6e7067791cdf92fd09279231d7c712c0907cc966d40175",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_linux-x64.manifest.json"
+    },
+    {
+      "name": "Focus_0.1.0_linux-x64.rpm",
+      "bytes": 3235934,
+      "sha256": "fef78f2870155638c7db9e5f809fb353e8f25100af2b761aa6ba3ff53d180f72",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_linux-x64.rpm"
+    },
+    {
+      "name": "Focus_0.1.0_macos-universal.dmg",
+      "bytes": 5674794,
+      "sha256": "54aea9f145a82d0885dea41bed2eb563f5da1b30793e447c5a8c3eb475e65cde",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_macos-universal.dmg"
+    },
+    {
+      "name": "Focus_0.1.0_macos-universal.manifest.json",
+      "bytes": 345,
+      "sha256": "859677fb8c8f5a52653fadbfbf9d112814b30f067aabfa4c4c397f5d6df1a997",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_macos-universal.manifest.json"
+    },
+    {
+      "name": "Focus_0.1.0_windows-x64-setup.exe",
+      "bytes": 1877935,
+      "sha256": "1bb7006f81763075be257fcedd55381d6998db1eb69bd0880e4b637d8abc721a",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_windows-x64-setup.exe"
+    },
+    {
+      "name": "Focus_0.1.0_windows-x64.manifest.json",
+      "bytes": 343,
+      "sha256": "23bec161e55720a63a26bc2018995dec8c794420ffde8697c0827228640d178c",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/Focus_0.1.0_windows-x64.manifest.json"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 995,
+      "sha256": "f9504f46b5fa081bb11a6a0a935b324123ea3f660a41c235653bab39c83acdfa",
+      "url": "https://github.com/makersns/focus-timer/releases/download/v0.1.0/SHA256SUMS.txt"
+    }
+  ]
+}
