@@ -637,9 +637,8 @@ impl Engine {
         Ok(self.transition(changed, changed, completed, now))
     }
 
-    /// A widget's explicit next-round tap follows the same cycle as the main UI.
+    /// An explicit next-round tap follows the same cycle on every native surface.
     /// The caller persists/emits only the final transition while holding its operation lock.
-    #[cfg(any(target_os = "android", test))]
     pub(crate) fn start_next_completed(
         &mut self,
         expected_run_id: &str,

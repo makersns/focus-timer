@@ -497,15 +497,22 @@ fn show_main(app: &AppHandle) {
     }
 }
 
+fn toggle_timer_transition(engine: &mut Engine, now: i64) -> Result<Transition, String> {
+    let snapshot = engine.snapshot();
+    let action = match snapshot.timer.status {
+        TimerStatus::Running => TimerAction::Pause,
+        TimerStatus::Paused => TimerAction::Resume,
+        TimerStatus::Idle => TimerAction::Start,
+        TimerStatus::Completed => {
+            return engine
+                .start_next_completed(snapshot.timer.run_id.as_deref().unwrap_or_default(), now);
+        }
+    };
+    engine.dispatch(action, now)
+}
+
 fn toggle_timer(app: &AppHandle) {
-    let _ = apply(app, |engine, now| {
-        let action = match engine.snapshot().timer.status {
-            TimerStatus::Running => TimerAction::Pause,
-            TimerStatus::Paused => TimerAction::Resume,
-            TimerStatus::Idle | TimerStatus::Completed => TimerAction::Start,
-        };
-        engine.dispatch(action, now)
-    });
+    let _ = apply(app, toggle_timer_transition);
 }
 
 /// Explicit exit is a pause, never a silently completed session.
@@ -533,6 +540,7 @@ struct Words {
     show: &'static str,
     mini: &'static str,
     start: &'static str,
+    next: &'static str,
     pause: &'static str,
     resume: &'static str,
     quit: &'static str,
@@ -575,6 +583,7 @@ fn words(language: &str) -> Words {
             mini: "显示桌面小组件",
             show: "打开 Focus",
             start: "开始",
+            next: "下一阶段",
             pause: "暂停",
             resume: "继续",
             quit: "暂停并退出",
@@ -588,6 +597,7 @@ fn words(language: &str) -> Words {
             mini: "顯示桌面小工具",
             show: "開啟 Focus",
             start: "開始",
+            next: "下一階段",
             pause: "暫停",
             resume: "繼續",
             quit: "暫停並結束",
@@ -601,6 +611,7 @@ fn words(language: &str) -> Words {
             mini: "ミニタイマーを表示",
             show: "Focus を開く",
             start: "開始",
+            next: "次のセッション",
             pause: "一時停止",
             resume: "再開",
             quit: "一時停止して終了",
@@ -614,6 +625,7 @@ fn words(language: &str) -> Words {
             mini: "미니 타이머 표시",
             show: "Focus 열기",
             start: "시작",
+            next: "다음 단계",
             pause: "일시 정지",
             resume: "계속",
             quit: "일시 정지 후 종료",
@@ -627,6 +639,7 @@ fn words(language: &str) -> Words {
             mini: "Show mini timer",
             show: "Open Focus",
             start: "Start",
+            next: "Next phase",
             pause: "Pause",
             resume: "Resume",
             quit: "Pause and quit",
@@ -741,7 +754,8 @@ fn refresh_tray(app: &AppHandle, snapshot: &Snapshot) {
     let action = match snapshot.timer.status {
         TimerStatus::Running => text.pause,
         TimerStatus::Paused => text.resume,
-        TimerStatus::Idle | TimerStatus::Completed => text.start,
+        TimerStatus::Idle => text.start,
+        TimerStatus::Completed => text.next,
     };
     let key = format!(
         "{}|{}|{}|{}",
@@ -935,9 +949,34 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::{
-        locale, popover_position, report_persistence, tray_title, AtomicU64, Engine,
-        ExternalTarget, Mutex, NativePreferences, TimerAction,
+        locale, popover_position, report_persistence, toggle_timer_transition, tray_title,
+        AtomicU64, Engine, ExternalTarget, Mutex, NativePreferences, TimerAction, TimerMode,
+        TimerStatus,
     };
+
+    #[test]
+    fn native_menu_primary_action_advances_completed_phase() {
+        let now = 1_800_000_000_000;
+        let mut engine = Engine::new(now);
+        engine
+            .dispatch(TimerAction::SetDuration { minutes: 1 }, now)
+            .unwrap();
+        toggle_timer_transition(&mut engine, now).unwrap();
+        let focus_id = engine.snapshot().timer.run_id;
+        engine.tick(now + 60_000);
+        let next = toggle_timer_transition(&mut engine, now + 60_001).unwrap();
+        assert_eq!(next.snapshot.timer.mode, TimerMode::ShortBreak);
+        assert_eq!(next.snapshot.timer.status, TimerStatus::Running);
+        assert_ne!(next.snapshot.timer.run_id, focus_id);
+        assert_eq!(next.snapshot.history.len(), 1);
+        assert!(next.persist);
+        assert!(next.completed.is_none());
+        engine.tick(now + 360_001);
+        let next = toggle_timer_transition(&mut engine, now + 360_002).unwrap();
+        assert_eq!(next.snapshot.timer.mode, TimerMode::Focus);
+        assert_eq!(next.snapshot.timer.status, TimerStatus::Running);
+        assert_eq!(next.snapshot.history.len(), 2);
+    }
 
     #[test]
     fn ticking_never_changes_native_window_preferences() {

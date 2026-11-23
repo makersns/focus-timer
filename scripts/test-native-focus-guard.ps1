@@ -11,6 +11,7 @@ Add-Type @'
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 public static class FocusWindowProbe {
   public delegate bool EnumProc(IntPtr window, IntPtr parameter);
   [StructLayout(LayoutKind.Sequential)] public struct Rect { public int Left, Top, Right, Bottom; }
@@ -26,18 +27,41 @@ public static class FocusWindowProbe {
   [DllImport("user32.dll")] public static extern IntPtr GetWindowLongPtr(IntPtr window, int index);
   [DllImport("user32.dll")] public static extern IntPtr GetTopWindow(IntPtr window);
   [DllImport("user32.dll")] public static extern IntPtr GetWindow(IntPtr window, uint direction);
-  public static IntPtr MiniWindow(uint processId) {
-    IntPtr found = IntPtr.Zero;
+  [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern int GetWindowText(IntPtr window, StringBuilder text, int count);
+  [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern int GetClassName(IntPtr window, StringBuilder text, int count);
+  public class WindowDescription {
+    public long Handle { get; set; }
+    public string Title { get; set; }
+    public string ClassName { get; set; }
+    public bool Visible { get; set; }
+    public bool Topmost { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+  }
+  public static List<WindowDescription> DescribeWindows(uint processId) {
+    var found = new List<WindowDescription>();
     EnumWindows((window, _) => {
       uint owner; GetWindowThreadProcessId(window, out owner);
+      if (owner != processId) return true;
       Rect rect; GetWindowRect(window, out rect);
-      if (owner == processId && IsWindowVisible(window)
-          && rect.Right - rect.Left < 640 && rect.Bottom - rect.Top < 500) {
-        found = window;
-      }
+      var title = new StringBuilder(512);
+      var className = new StringBuilder(256);
+      GetWindowText(window, title, title.Capacity);
+      GetClassName(window, className, className.Capacity);
+      found.Add(new WindowDescription {
+        Handle = window.ToInt64(), Title = title.ToString(), ClassName = className.ToString(),
+        Visible = IsWindowVisible(window), Topmost = Topmost(window),
+        Width = rect.Right - rect.Left, Height = rect.Bottom - rect.Top
+      });
       return true;
     }, IntPtr.Zero);
     return found;
+  }
+  public static IntPtr MiniWindow(uint processId) {
+    // Size alone can select a WebView2 helper or tooltip from the same process.
+    var matches = DescribeWindows(processId).FindAll(window =>
+      window.Visible && window.Title == "Focus \u2014 Mini");
+    return matches.Count == 1 ? new IntPtr(matches[0].Handle) : IntPtr.Zero;
   }
   public static bool Topmost(IntPtr window) {
     return (GetWindowLongPtr(window, -20).ToInt64() & 8) != 0;
@@ -62,8 +86,13 @@ public static class FocusWindowProbe {
 '@
 $application = @(Get-Process -Name 'focus-timer' -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $ApplicationPath })
 if ($application.Count -ne 1) { throw 'Expected exactly one CI Focus process.' }
+$initialWindows = @([FocusWindowProbe]::DescribeWindows([uint32]$application[0].Id))
 $mini = [FocusWindowProbe]::MiniWindow([uint32]$application[0].Id)
-if ($mini -eq [IntPtr]::Zero) { throw 'The native mini timer is not visible.' }
+if ($mini -eq [IntPtr]::Zero) {
+  @{ error = 'Expected one visible native Focus mini window.'; windows = $initialWindows } |
+    ConvertTo-Json -Depth 6 | Set-Content -Encoding utf8 $Output
+  throw 'Expected one visible native Focus mini window with its exact title.'
+}
 $form = New-Object System.Windows.Forms.Form
 $form.Text = 'Focus CI foreground guard'
 $form.Width = 420
@@ -79,6 +108,15 @@ $form.Controls.Add($label)
 $observations = [System.Collections.Generic.List[object]]::new()
 $expectedPinned = $Pinned -eq 'true'
 try {
+  # Preferences commit before native window work is dispatched to the UI thread.
+  # Establish the requested state before measuring stability across timer ticks.
+  $initialWait = [System.Diagnostics.Stopwatch]::StartNew()
+  while ([FocusWindowProbe]::Topmost($mini) -ne $expectedPinned -and $initialWait.Elapsed.TotalSeconds -lt 3) {
+    Start-Sleep -Milliseconds 50
+  }
+  if ([FocusWindowProbe]::Topmost($mini) -ne $expectedPinned) {
+    throw 'The native mini timer did not enter the requested pin state.'
+  }
   $form.Show()
   $form.Activate()
   [FocusWindowProbe]::Focus($form.Handle)
@@ -105,8 +143,10 @@ try {
     Start-Sleep -Milliseconds 100
   }
 } finally {
-  @{ pinned = $expectedPinned; observations = $observations.ToArray() } |
-    ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 $Output
+  @{ pinned = $expectedPinned; miniHandle = $mini.ToInt64(); initialWindows = $initialWindows;
+     finalWindows = @([FocusWindowProbe]::DescribeWindows([uint32]$application[0].Id));
+     observations = $observations.ToArray() } |
+    ConvertTo-Json -Depth 6 | Set-Content -Encoding utf8 $Output
   $form.Close()
   $form.Dispose()
 }

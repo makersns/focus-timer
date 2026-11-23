@@ -149,6 +149,20 @@ fieldset { min-width: 0; }
 .select-option[data-active="true"] { background: var(--accent-soft); }
 .select-option[aria-selected="true"] > svg { color: var(--accent-strong); stroke-width: 2.2; }
 .select-check-placeholder { visibility: hidden; }
+
+/* Keep scroll cues visible while matching the settings surfaces. */
+.modal-body, .select-popup { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 55%, var(--surface)) transparent; }
+.modal-body:hover, .select-popup:hover { scrollbar-color: var(--accent) transparent; }
+@supports selector(::-webkit-scrollbar) {
+  .modal-body, .select-popup, .modal-body:hover, .select-popup:hover { scrollbar-width: auto; scrollbar-color: auto; }
+  .modal-body::-webkit-scrollbar, .select-popup::-webkit-scrollbar { width: 6px; height: 6px; }
+  .modal-body::-webkit-scrollbar-track, .select-popup::-webkit-scrollbar-track { background: transparent; }
+  .modal-body::-webkit-scrollbar-thumb, .select-popup::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 55%, var(--surface)); border-radius: 6px; }
+  .modal-body::-webkit-scrollbar-thumb:hover, .select-popup::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  .modal-body::-webkit-scrollbar-thumb:active, .select-popup::-webkit-scrollbar-thumb:active { background: var(--accent-strong); }
+  .modal-body::-webkit-scrollbar-corner, .select-popup::-webkit-scrollbar-corner { background: transparent; }
+}
+
 .setting-switches { display: flex; flex-direction: column; gap: 19px; }
 .setting-switch { display: flex; align-items: center; justify-content: space-between; gap: 25px; cursor: pointer; }
 .setting-switch > span { min-width: 0; display: flex; flex-direction: column; gap: 5px; }

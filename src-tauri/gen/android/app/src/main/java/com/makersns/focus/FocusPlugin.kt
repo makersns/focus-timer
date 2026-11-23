@@ -23,7 +23,9 @@ class FocusPlugin(private val owner: Activity) : Plugin(owner) {
     fun execute(invoke: Invoke) {
         val request = try { JSONObject(invoke.getArgs().getString("request")) }
         catch (_: Exception) { invoke.reject("invalid_request", "invalid_request"); return }
-        FocusController.submit(owner.applicationContext, request, userInitiated = true) { result ->
+        val action = request.optJSONObject("action")?.optString("type")
+        val explicitStart = request.optString("type") == "action" && action in setOf("start", "resume")
+        FocusController.submit(owner.applicationContext, request, userInitiated = explicitStart) { result ->
             result.fold(
                 onSuccess = { invoke.resolve(JSObject.fromJSONObject(it)) },
                 onFailure = { invoke.reject(it.message ?: "timer_unavailable", it.message ?: "timer_unavailable") }

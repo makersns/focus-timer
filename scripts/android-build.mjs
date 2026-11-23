@@ -48,7 +48,7 @@ function capture(command, args, options = {}) {
   return execFileSync(command, args, { cwd: root, env, encoding: 'utf8', ...options });
 }
 let sourceCommit = null;
-try { sourceCommit = capture('git', ['rev-parse', '--verify', 'HEAD']).trim(); }
+try { sourceCommit = capture('git', ['rev-parse', '--verify', 'HEAD'], { stdio: ['ignore', 'pipe', 'ignore'] }).trim(); }
 catch { if (release) throw new Error('A reviewed Git commit is required for release builds.'); }
 const status = () => capture('git', ['status', '--porcelain', '--untracked-files=normal']).trim();
 if (release && status()) throw new Error('Commit the reviewed source before building a release; the working tree must be clean.');
